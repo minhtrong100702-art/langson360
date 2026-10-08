@@ -1,0 +1,3064 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lạng Sơn 360 - AI Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #006064;
+            /* Xanh ngọc sậm - Công nghệ & Du lịch */
+            --primary-light: #B2EBF2;
+            --primary-dark: #00363A;
+            --accent: #FF5722;
+            /* Đỏ/Cam - Điểm nhấn nổi bật */
+            --gold: #FFC107;
+            /* Vàng đồng - Văn hóa truyền thống */
+            --bg-color: #F8FBFC;
+            --card-bg: #FFFFFF;
+            --text-dark: #263238;
+            --text-light: #546E7A;
+            --white: #FFFFFF;
+            --border-radius: 16px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            /* Tắt nháy xanh trên mobile */
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(0, 96, 100, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .logo i {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown>a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown>a::after {
+            content: '\25BE';
+            font-size: 0.75rem;
+            margin-left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover>a::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 30, 48, 0.97);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            min-width: 200px;
+            padding: 0.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            z-index: 1000;
+            flex-direction: column;
+            gap: 0.2rem;
+            opacity: 0;
+            transform: translateX(-50%) translateY(-6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: flex;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown-menu a {
+            color: var(--white) !important;
+            text-decoration: none;
+            font-size: 0.9rem !important;
+            font-weight: 500;
+            padding: 0.6rem 1rem !important;
+            border-radius: 10px;
+            display: flex !important;
+            align-items: center;
+            gap: 0.6rem;
+            transition: background 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Layouts */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+            animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Utilities */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(0, 96, 100, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 96, 100, 0.4);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #E64A19);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 87, 34, 0.4);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Trang Chủ - Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            border-radius: 24px;
+            padding: 5rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        /* Hiệu ứng Glassmorphism cho Hero */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 10%, transparent 20%);
+            background-size: 40px 40px;
+            animation: moveBackground 30s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(40px, 40px) rotate(5deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            color: var(--gold);
+            letter-spacing: -1px;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-style: italic;
+            opacity: 0.85;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.5rem 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-item i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .stat-item div:nth-child(2) {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Grid & Cards (Khám Phá) */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--primary-dark);
+            font-size: 2.2rem;
+            font-weight: 800;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            border-radius: 4px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--primary-light);
+            background: var(--white);
+            color: var(--text-light);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0, 96, 100, 0.2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-img {
+            height: 220px;
+            background-color: var(--primary-light);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            color: var(--white);
+            position: relative;
+        }
+
+        .card-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: var(--white);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.15) rotate(10deg);
+            box-shadow: 0 4px 12px rgba(0, 96, 100, 0.4);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--primary-dark);
+        }
+
+        .card-desc {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        .tts-btn {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tts-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .tts-btn.playing {
+            background: var(--accent);
+            color: white;
+            animation: pulse-tts 1.5s infinite;
+        }
+
+        @keyframes pulse-tts {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 12px rgba(255, 87, 34, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+            }
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .verified-badge {
+            color: #00897B;
+            background: #E0F2F1;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Bản đồ Google Maps & Layout Sidebar */
+        .map-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            height: 700px;
+        }
+
+        @media (min-width: 992px) {
+            .map-wrapper {
+                flex-direction: row;
+            }
+        }
+
+        .map-sidebar {
+            width: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-right: 0.5rem;
+        }
+
+        @media (min-width: 992px) {
+            .map-sidebar {
+                width: 350px;
+                padding-right: 1rem;
+            }
+        }
+
+        /* Tùy chỉnh thanh cuộn cho sidebar */
+        .map-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .map-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .map-sidebar::-webkit-scrollbar-thumb {
+            background: #CFD8DC;
+            border-radius: 4px;
+        }
+
+        .map-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #90A4AE;
+        }
+
+        .map-view {
+            flex: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--primary-light);
+            background: #E0F7FA;
+            min-height: 400px;
+            box-shadow: inset 0 0 20px rgba(0, 150, 136, 0.1);
+        }
+
+        .map-item {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #f0f0f0;
+            background: #F8FBFC;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .map-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .map-item.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        /* Làm nổi bật Di Tích Lịch Sử */
+        .map-item.monument {
+            border-left: 4px solid var(--accent);
+            background: #FFF8E1;
+            /* Màu vàng nhạt */
+        }
+
+        .map-item.monument:hover,
+        .map-item.monument.active {
+            background: #FFECB3;
+            border-color: var(--accent);
+        }
+
+        .monument-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            animation: pulse-badge 2s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes pulse-badge {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(255, 87, 34, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+            }
+        }
+
+        /* AI Guide Chat */
+        .ai-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: 650px;
+            border: 1px solid var(--primary-light);
+            overflow: hidden;
+        }
+
+        .ai-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-header img,
+        .ai-header .icon-wrap {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-chat-box {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: #F0F7F8;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 1.2rem 1.5rem;
+            border-radius: 18px;
+            animation: fadeInMsg 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            line-height: 1.5;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        @keyframes fadeInMsg {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            color: var(--text-dark);
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0, 96, 100, 0.2);
+        }
+
+        .ai-suggestions {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            scrollbar-width: thin;
+        }
+
+        .ai-suggestions::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .ai-suggestions::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .ai-suggest-btn {
+            background: var(--bg-color);
+            border: 1px solid #CFD8DC;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .ai-suggest-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-color: var(--primary-light);
+        }
+
+        .ai-input-area {
+            display: flex;
+            padding: 1.25rem 2rem;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .ai-input-area input {
+            flex-grow: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 30px;
+            outline: none;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .ai-input-area input:focus {
+            border-color: var(--primary);
+            background: #F4FBFB;
+        }
+
+        .ai-input-area button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.2s;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0, 96, 100, 0.3);
+            flex-shrink: 0;
+        }
+
+        .ai-input-area button:hover {
+            background: var(--accent);
+            transform: scale(1.05) rotate(10deg);
+            box-shadow: 0 6px 12px rgba(255, 87, 34, 0.4);
+        }
+
+        /* Form & Calculator */
+        .form-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1.05rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: 0.3s;
+            background: #FAFAFA;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 150, 136, 0.1);
+        }
+
+        /* Kết quả Trip */
+        .trip-timeline {
+            margin-top: 3rem;
+            border-left: 4px solid var(--primary-light);
+            padding-left: 2rem;
+            display: none;
+            animation: fadeUp 0.5s;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2);
+            z-index: 1;
+        }
+
+        .timeline-time {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trip-summary {
+            background: linear-gradient(135deg, #E0F2F1, #B2DFDB);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .trip-stat {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .trip-stat strong {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Quiz Game */
+        .quiz-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #F0F0F0;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #E0E0E0;
+            border-radius: 6px;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #4DB6AC);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--primary-dark);
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .option-btn {
+            padding: 1.25rem;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option-btn::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-light);
+            background: #F4FBFB;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border-color: #4CAF50;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+        }
+
+        .option-btn.correct::before {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            box-shadow: inset 0 0 0 4px white;
+        }
+
+        .option-btn.wrong {
+            background: #FFEBEE;
+            color: #C62828;
+            border-color: #F44336;
+        }
+
+        .option-btn.wrong::before {
+            background: #F44336;
+            border-color: #F44336;
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-left: 5px solid var(--gold);
+            background: #FFFDE7;
+            border-radius: 0 12px 12px 0;
+            animation: fadeInMsg 0.4s;
+        }
+
+        /* Modal & Toast */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary);
+            color: white;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            background: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Nhóm nút trôi nổi (Floating Buttons Container) */
+        #floating-buttons-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-end;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #floating-buttons-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .drag-handle-bar {
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: var(--text-dark);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: grab;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .drag-handle-bar:active {
+            cursor: grabbing;
+        }
+
+        .close-floating {
+            cursor: pointer;
+            background: white;
+            color: #d32f2f;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .close-floating:hover {
+            background: #d32f2f;
+            color: white;
+        }
+
+        /* Nút phục hồi (Hiện lại) */
+        #show-floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: -50px;
+            /* Ẩn đi mặc định */
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50% 0 0 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99;
+            cursor: pointer;
+            transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 1.2rem;
+        }
+
+        #show-floating-btn.visible {
+            right: 0;
+            /* Hiện ra */
+        }
+
+        /* Nút Demo */
+        .btn-wow {
+            background: linear-gradient(45deg, var(--accent), #FF9800);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
+            cursor: pointer;
+            animation: pulse-wow 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-wow:hover {
+            transform: scale(1.05);
+            animation: none;
+            box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
+        }
+
+        .btn-wow.active {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            animation: pulse-active 1.5s infinite;
+        }
+
+        @keyframes pulse-wow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(255, 87, 34, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+            }
+        }
+
+        @keyframes pulse-active {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(76, 175, 80, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+
+        /* Nút Chat AI Nhanh */
+        .btn-chat-ai {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(0, 96, 100, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-chat-ai:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.6);
+        }
+
+        /* Nút Bật Nhạc */
+        .btn-music {
+            background: linear-gradient(135deg, #9C27B0, #673AB7);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-music:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.6);
+        }
+
+        .btn-music.playing {
+            background: linear-gradient(135deg, #E91E63, #F44336);
+            animation: pulse-music 1.5s infinite;
+        }
+
+        @keyframes pulse-music {
+            0% {
+                box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(233, 30, 99, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+            }
+        }
+
+        /* Về Ứng dụng */
+        .about-app {
+            margin-top: 5rem;
+            padding: 3rem;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-top: 5px solid var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                padding: 1rem 2rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-stats {
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+
+            .stat-item {
+                padding: 1rem;
+                width: 45%;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #floating-buttons-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .btn-wow,
+            .btn-chat-ai {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-mountain-sun"></i> LẠNG SƠN 360
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+        <div class="nav-links" id="navLinks">
+            <a href="#" onclick="navigate('home')" class="active"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <div class="dropdown">
+                <a href="#" onclick="navigate('explore')"><i class="fa-solid fa-compass"></i> Khám phá</a>
+                <div class="dropdown-menu">
+                    <a href="#" onclick="navigateExploreFilter('Địa danh')"><i class="fa-solid fa-mountain"></i> Địa
+                        danh</a>
+                    <a href="#" onclick="navigateExploreFilter('Lễ hội')"><i class="fa-solid fa-masks-theater"></i> Lễ
+                        hội</a>
+                    <a href="#" onclick="navigateExploreFilter('Ẩm thực')"><i class="fa-solid fa-utensils"></i> Ẩm
+                        thực</a>
+                    <a href="#" onclick="navigateExploreFilter('Sản phẩm')"><i class="fa-solid fa-seedling"></i> Sản
+                        phẩm địa
+                        phương</a>
+                </div>
+            </div>
+            <a href="#" onclick="navigate('map')"><i class="fa-solid fa-map-location-dot"></i> Bản đồ</a>
+            <a href="#" onclick="navigate('ai-guide')"><i class="fa-solid fa-robot"></i> Hỏi AI</a>
+            <a href="#" onclick="navigate('trip')"><i class="fa-solid fa-route"></i> Lịch trình</a>
+            <a href="#" onclick="navigate('challenge')"><i class="fa-solid fa-gamepad"></i> Lạng Sơn Challenge</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 1. TRANG CHỦ -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <div style="position: relative; z-index: 2;">
+                    <h1>LẠNG SƠN 360 - AI GUIDE</h1>
+                    <h2>Khám phá – Trải nghiệm – Bảo tồn – Lan tỏa</h2>
+                    <p>"Khám phá quê hương bằng công nghệ. Hiểu văn hóa bằng trải nghiệm. Lan tỏa giá trị bằng sáng
+                        tạo."
+                    </p>
+
+                    <div style="margin-top: 2.5rem; display: flex; justify-content: center;">
+                        <button class="btn btn-wow"
+                            style="font-size: 1.3rem; padding: 1rem 3rem; background: linear-gradient(45deg, #4CAF50, #8BC34A); animation: pulse-active 1.5s infinite;"
+                            onclick="navigate('explore')">
+                            <i class="fa-solid fa-earth-asia fa-spin"></i> KHÁM PHÁ NGAY
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hero-stats" style="position: relative; z-index: 2;">
+                    <div class="stat-item">
+                        <i class="fa-solid fa-mountain"></i>
+                        <div id="stat-places">0</div>
+                        <div>Địa danh</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-masks-theater"></i>
+                        <div id="stat-culture">0</div>
+                        <div>Văn hóa & Lễ hội</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-bowl-food"></i>
+                        <div id="stat-food">0</div>
+                        <div>Ẩm thực & Sản phẩm</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-star"></i>
+                        <div>2</div>
+                        <div>Thử thách</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giới thiệu Lạng Sơn & Footer -->
+            <div class="about-app" style="margin-top: 3rem; text-align: left; padding: 2.5rem 3rem;">
+                <div style="display: flex; flex-direction: column; md:flex-row; gap: 2rem; align-items: center;">
+                    <div style="flex: 1;">
+                        <h2 style="color: var(--primary-dark); margin-bottom: 1.5rem; font-size: 2rem;">Về miền biên
+                            cương Xứ Lạng</h2>
+                        <p style="font-size: 1.1rem; color: var(--text-light); line-height: 1.8; margin-bottom: 1rem;">
+                            Lạng Sơn là tỉnh miền núi biên giới phía Bắc, vùng đất phên dậu thiêng liêng của Tổ quốc.
+                            Nơi đây được thiên nhiên ban tặng phong cảnh non nước hữu tình với quần thể hang động Nhị
+                            Thanh, Tam Thanh, núi nàng Tô Thị hay đỉnh Mẫu Sơn quanh năm sương phủ.
+                        </p>
+                        <p style="font-size: 1.1rem; color: var(--text-light); line-height: 1.8;">
+                            Không chỉ nổi bật với cảnh sắc thiên nhiên, Lạng Sơn còn mang đậm dấu ấn lịch sử hào hùng
+                            qua Ải Chi Lăng và là cái nôi giao thoa văn hóa đặc sắc của đồng bào các dân tộc Tày, Nùng,
+                            Dao. Ẩm thực trứ danh với Vịt quay mắc mật, Phở chua cùng các loại sản vật quý như Hoa hồi,
+                            Đào Mẫu Sơn, Na Chi Lăng đã làm say lòng biết bao du khách thập phương.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Bản quyền & Truy cập -->
+                <div
+                    style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div style="color: var(--text-light); font-size: 0.95rem; font-weight: 500;">
+                        &copy; 2026 Lạng Sơn 360 - AI Guide. Sản phẩm dự thi STEM.<br>
+                        <small>Bản quyền thuộc về Nhóm Tác Giả.</small>
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; gap: 0.75rem; background: #F4FBFB; padding: 0.75rem 1.25rem; border-radius: 30px; border: 1px solid var(--primary-light); font-weight: 600; color: var(--primary-dark); box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);">
+                        <i class="fa-solid fa-chart-simple" style="color: var(--accent);"></i>
+                        Số lượt truy cập: <span id="visitor-count"
+                            style="font-size: 1.1rem; color: var(--accent);">824</span>
+                    </div>
+                </div>
+
+                <script>
+                    // Script đếm lượt truy cập chạy offline và tự động tăng
+                    document.addEventListener('DOMContentLoaded', function () {
+                        let count = localStorage.getItem('ls360_visitors');
+
+                        // Nếu chưa có dữ liệu (lần đầu vào web), bắt đầu bằng 824
+                        if (!count) {
+                            count = 824;
+                        } else {
+                            // Nếu đã từng vào, lấy số cũ cộng thêm 1 cho lần truy cập này
+                            count = parseInt(count) + 1;
+                        }
+
+                        // Hàm cập nhật hiển thị và lưu vào bộ nhớ
+                        function updateVisitorCount() {
+                            localStorage.setItem('ls360_visitors', count);
+                            document.getElementById('visitor-count').innerText = count.toLocaleString('vi-VN');
+                        }
+
+                        // Cập nhật ngay khi vừa tải trang
+                        updateVisitorCount();
+
+                        // Thiết lập bộ đếm thời gian: tự động tăng 1 sau mỗi 1 phút (60,000 milliseconds)
+                        setInterval(() => {
+                            count++;
+                            updateVisitorCount();
+                        }, 60000);
+                    });
+                </script>
+            </div>
+        </div>
+
+        <!-- 2. KHÁM PHÁ LẠNG SƠN -->
+        <div id="explore" class="page">
+            <h2 class="section-title">Khám Phá Xứ Lạng</h2>
+            <div class="filters" id="explore-filters">
+                <button class="filter-btn active" onclick="filterExplore('All', this)">Tất cả</button>
+                <button class="filter-btn" onclick="filterExplore('Địa danh', this)">Địa danh</button>
+                <button class="filter-btn" onclick="filterExplore('Lễ hội', this)">Lễ hội</button>
+                <button class="filter-btn" onclick="filterExplore('Ẩm thực', this)">Ẩm thực</button>
+                <button class="filter-btn" onclick="filterExplore('Sản phẩm', this)">Sản phẩm địa phương</button>
+            </div>
+
+            <div class="form-group" style="max-width: 500px; margin: 0 auto 3rem auto; position: relative;">
+                <input type="text" id="searchInput" class="form-control"
+                    style="padding-left: 3rem; border-radius: 30px;" placeholder="Tìm kiếm địa điểm, món ăn, lễ hội..."
+                    onkeyup="searchExplore()">
+                <i class="fa-solid fa-search"
+                    style="position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+            </div>
+
+            <div class="grid" id="explore-grid">
+                <!-- Nội dung render bằng JS -->
+            </div>
+        </div>
+
+        <!-- 3. BẢN ĐỒ TƯƠNG TÁC -->
+        <div id="map" class="page">
+            <h2 class="section-title">Bản Đồ Vệ Tinh & Di Tích Lạng Sơn</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light); font-style: italic;">
+                * Tích hợp bản đồ thực tế Google Maps để xem chi tiết. Các <strong style="color: var(--accent);">Di tích
+                    lịch sử</strong> được làm nổi bật để dễ dàng khám phá.
+            </p>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterMap('All', this)">Tất cả</button>
+                <button class="filter-btn" onclick="filterMap('Địa danh', this)"><i class="fa-solid fa-mountain"></i> Di
+                    tích & Địa danh</button>
+                <button class="filter-btn" onclick="filterMap('Ẩm thực', this)"><i class="fa-solid fa-utensils"></i> Ẩm
+                    thực</button>
+                <button class="filter-btn" onclick="filterMap('Lễ hội', this)"><i class="fa-solid fa-masks-theater"></i>
+                    Lễ hội</button>
+            </div>
+
+            <div class="map-wrapper">
+                <div class="map-sidebar" id="map-sidebar">
+                    <!-- JS sẽ render danh sách địa điểm vào đây -->
+                </div>
+                <div class="map-view">
+                    <iframe id="google-map-frame"
+                        src="https://maps.google.com/maps?q=Lạng+Sơn,Việt+Nam&hl=vi&z=10&output=embed" width="100%"
+                        height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. AI GUIDE -->
+        <div id="ai-guide" class="page">
+            <h2 class="section-title">Hỏi AI - Trợ Lý Khám Phá</h2>
+
+            <div
+                style="background: #E3F2FD; border-left: 4px solid #2196F3; padding: 1.2rem; margin-bottom: 2rem; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <strong><i class="fa-solid fa-circle-info"></i> LƯU Ý VỀ DỮ LIỆU & AI:</strong><br>
+                Trợ lý AI này hoạt động offline bằng công nghệ Javascript tích hợp trong ứng dụng. Tất cả các câu trả
+                lời đều dựa trên cơ sở dữ liệu về văn hóa, địa danh Lạng Sơn đã được <strong>học sinh thu thập và kiểm
+                    chứng từ các nguồn uy tín (Vinpearl, Báo Lạng Sơn, Vietnamnet, Cellphones...)</strong>.
+            </div>
+
+            <div class="ai-container">
+                <div class="ai-header">
+                    <div class="icon-wrap">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.3rem; letter-spacing: 0.5px;">Lạng Sơn 360 AI</h3>
+                        <small style="opacity: 0.85; font-size: 0.85rem;">Hoạt động offline | Dữ liệu thực tế</small>
+                    </div>
+                </div>
+
+                <div class="ai-chat-box" id="chat-box">
+                    <div class="message msg-ai">
+                        Xin chào! Tôi là Trợ lý AI của Lạng Sơn 360. Tôi có thể giúp bạn tạo hành trình, tìm hiểu các
+                        món đặc sản như Vịt quay, Phở chua, hoặc thông tin về các địa danh như Thành nhà Mạc, Động Tam
+                        Thanh. Bạn cần gì nào?
+                    </div>
+                </div>
+
+                <div class="ai-suggestions">
+                    <button class="ai-suggest-btn" onclick="sendQuickMessage('Gợi ý khám phá Lạng Sơn 1 ngày')">Khám phá
+                        1 ngày</button>
+                    <button class="ai-suggest-btn" onclick="sendQuickMessage('Kể tên các món ăn đặc sản Lạng Sơn')">Món
+                        ăn đặc sản</button>
+                    <button class="ai-suggest-btn"
+                        onclick="sendQuickMessage('Lạng Sơn có những di tích lịch sử nào nổi tiếng?')">Di tích lịch
+                        sử</button>
+                    <button class="ai-suggest-btn" onclick="sendQuickMessage('Tôi muốn tìm hiểu về lễ hội Ná Nhèm')">Lễ
+                        hội Ná Nhèm</button>
+                </div>
+
+                <div class="ai-input-area">
+                    <input type="text" id="ai-input"
+                        placeholder="Nhập câu hỏi (vd: Vịt quay lạng sơn giá bao nhiêu?)..."
+                        onkeypress="handleChatEnter(event)">
+                    <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. SMART TRIP -->
+        <div id="trip" class="page">
+            <h2 class="section-title">Lịch trình - Tạo Hành Trình Tối Ưu</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">Ứng dụng mô hình tính toán để
+                sắp xếp các điểm đến gần nhau, tiết kiệm thời gian di chuyển.</p>
+
+            <div class="form-card">
+                <div class="form-group">
+                    <label>Thời gian tham quan:</label>
+                    <select id="trip-time" class="form-control">
+                        <option value="half">Nửa ngày (4 tiếng)</option>
+                        <option value="1">1 Ngày</option>
+                        <option value="2">2 Ngày 1 Đêm</option>
+                        <option value="3">3 Ngày 2 Đêm</option>
+                        <option value="4">4 Ngày 3 Đêm</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Sở thích ưu tiên:</label>
+                    <select id="trip-interest" class="form-control">
+                        <option value="mixed">Kết hợp nhiều trải nghiệm</option>
+                        <option value="history">Lịch sử & Tâm linh (Đền đài, Thành cổ)</option>
+                        <option value="nature">Thiên nhiên (Núi, Thác, Thung lũng)</option>
+                        <option value="food">Tập trung ẩm thực địa phương</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mức ngân sách/Người:</label>
+                    <select id="trip-budget" class="form-control">
+                        <option value="low">Tiết kiệm (Chủ yếu tham quan miễn phí)</option>
+                        <option value="med">Phổ thông (Có thưởng thức Vịt quay, đặc sản)</option>
+                        <option value="high">Thoải mái (Nghỉ dưỡng, mua sắm nhiều)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;"
+                    onclick="generateTrip()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> TẠO HÀNH TRÌNH BẰNG THUẬT TOÁN
+                </button>
+
+                <div id="trip-result" class="trip-timeline">
+                    <!-- Kết quả render bằng JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. LẠNG SƠN CHALLENGE -->
+        <div id="challenge" class="page">
+            <h2 class="section-title">Lạng Sơn Challenge</h2>
+            <p style="text-align: center; margin-bottom: 3rem; font-size: 1.1rem;">Game hóa học tập (Gamification) -
+                Kiểm tra kiến thức và tình yêu quê hương xứ Lạng.</p>
+
+            <div id="game-selection" style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                <div class="card" style="width: 320px; text-align: center; border-radius: 20px;"
+                    onclick="startQuiz('knowledge')">
+                    <div class="card-img"
+                        style="height: 160px; font-size: 4rem; background: linear-gradient(45deg, #1976D2, #64B5F6); color:white;">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" style="font-size: 1.5rem;">Giải Mã Địa Danh</h3>
+                        <p class="card-desc">Thử thách kiến thức về các địa danh, di tích lịch sử và văn hóa Lạng Sơn.
+                        </p>
+                        <button class="btn btn-primary" style="width: 100%;">Bắt đầu ngay</button>
+                    </div>
+                </div>
+
+                <div class="card" style="width: 320px; text-align: center; border-radius: 20px;"
+                    onclick="startQuiz('food')">
+                    <div class="card-img"
+                        style="height: 160px; font-size: 4rem; background: linear-gradient(45deg, #FF8F00, #FFCA28); color:white;">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" style="font-size: 1.5rem;">Vua Ẩm Thực</h3>
+                        <p class="card-desc">Bạn có am hiểu về Vịt quay, Khâu nhục hay Phở chua xứ Lạng không?</p>
+                        <button class="btn btn-accent" style="width: 100%;">Bắt đầu ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-area" class="quiz-container" style="display: none;">
+                <div class="quiz-header">
+                    <h3 id="quiz-title" style="margin: 0; font-size: 1.5rem; color: var(--primary);">Thử thách</h3>
+                    <div style="font-size: 1.2rem; font-weight: bold;"><i class="fa-solid fa-star"
+                            style="color:var(--gold);"></i> Điểm: <span id="score" style="color:var(--accent);">0</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="quiz-progress"></div>
+                </div>
+
+                <div id="quiz-content">
+                    <div class="question-text" id="question-text">Câu hỏi hiển thị ở đây?</div>
+                    <div class="options-grid" id="options-area">
+                        <!-- Nút lựa chọn tạo bằng JS -->
+                    </div>
+                    <div class="explanation-box" id="explanation-box">
+                        <strong style="color: #F57F17; display:block; margin-bottom: 0.5rem; font-size: 1.1rem;"><i
+                                class="fa-solid fa-lightbulb"></i> Giải thích chi tiết:</strong>
+                        <p id="explanation-text" style="color: #424242; line-height: 1.6;"></p>
+                        <button class="btn btn-primary" style="margin-top:1.5rem; float: right;"
+                            onclick="nextQuestion()">Tiếp theo <i class="fa-solid fa-arrow-right"></i></button>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-result" style="display: none; text-align: center; padding: 2rem 0;">
+                    <i class="fa-solid fa-trophy"
+                        style="font-size: 5rem; color: var(--gold); margin-bottom: 1.5rem; animation: modalPop 0.5s;"></i>
+                    <h3 style="font-size: 2rem; color: var(--primary-dark); margin-bottom: 1rem;">Hoàn thành thử thách!
+                    </h3>
+                    <p style="font-size: 1.3rem; margin: 1rem 0;">Tổng điểm: <strong id="final-score"
+                            style="color:var(--accent); font-size: 1.8rem;">0</strong></p>
+                    <div id="rank-badge"
+                        style="display:inline-block; padding: 0.8rem 2rem; background: var(--primary-light); color: var(--primary-dark); font-weight: bold; font-size: 1.2rem; border-radius: 30px; margin: 1rem 0 2rem 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        Cấp độ</div>
+                    <br>
+                    <button class="btn btn-outline"
+                        onclick="document.getElementById('quiz-area').style.display='none'; document.getElementById('game-selection').style.display='flex';">Chơi
+                        lại chủ đề khác</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chi tiết -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" style="margin: 0; font-size: 1.4rem;">Tên địa điểm</h3>
+                <button class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="width: 100%; height: 250px; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"
+                    id="modalIcon">
+                    <!-- Icon/Image -->
+                </div>
+
+                <!-- Nút Nghe TTS trong Modal -->
+                <button class="btn btn-accent" id="modalTtsBtn" style="width: 100%; margin-bottom: 1.5rem;"
+                    onclick="playModalTTS()">
+                    <i class="fa-solid fa-volume-high"></i> Bật/Tắt Thuyết Minh
+                </button>
+
+                <p id="modalDesc" style="margin-bottom:1.5rem; line-height: 1.7; font-size: 1.05rem;"></p>
+                <div style="background: #F8FBFC; padding: 1.5rem; border-radius: 12px; border: 1px solid #E0E0E0;">
+                    <p style="margin-bottom: 0.5rem;"><strong><i class="fa-solid fa-tag"
+                                style="color:var(--primary);"></i> Phân loại:</strong> <span id="modalCat"
+                            style="font-weight: 500;"></span></p>
+                    <p><strong><i class="fa-solid fa-star" style="color:var(--gold);"></i> Ý nghĩa / Giá trị:</strong>
+                        <span id="modalValue"></span>
+                    </p>
+                    <div style="margin-top:1.5rem; padding-top: 1rem; border-top: 1px dashed #ccc;"
+                        class="verified-badge">
+                        <i class="fa-solid fa-shield-check"></i> Thông tin tổng hợp từ báo chí (Vinpearl, Vietnamnet...)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">
+        <i class="fa-solid fa-circle-check" style="color: #4CAF50; font-size: 1.2rem;"></i> <span id="toast-msg">Thông
+            báo</span>
+    </div>
+
+    <!-- Khung chứa các nút trôi nổi có thể kéo/ẩn -->
+    <div id="floating-buttons-container">
+        <div class="drag-handle-bar" id="drag-handle">
+            <i class="fa-solid fa-grip-lines"></i> Kéo di chuyển
+            <div class="close-floating" onclick="toggleFloatingButtons()" title="Ẩn các nút này">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+        </div>
+
+        <!-- Nút Chat AI Nhanh -->
+        <button class="btn-chat-ai" onclick="openQuickChat()">
+            <i class="fa-solid fa-robot"></i> CHAT VỚI AI
+        </button>
+
+        <!-- Nút WOW -->
+        <button id="btn-wow" class="btn-wow" onclick="runWowDemo()">
+            <i class="fa-solid fa-microphone-lines"></i> GIỚI THIỆU NHANH
+        </button>
+    </div>
+
+    <!-- Nút phục hồi khi đã ẩn -->
+    <button id="show-floating-btn" onclick="toggleFloatingButtons()" title="Hiện lại menu nhanh">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <script>
+        // --- Âm thanh SFX (Click) Base64 ---
+        // Tiếng Pop nhẹ nhàng
+        const clickSoundData = "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVgGAAB8fHx8fHx8fHx8fHx8fHSAfH+Ae3t8gX18enp8fnx6enl6fHt5e3t6enl7enl4ent7fH58fHx+foCAgYB/gYGBgX+Af4B/f39+fXx7eXh2c3FtbGpqaGdlZmRiYF9cW1pYV1VTUlFQUFBPUE5MTUtKSUlJSUpJSUpJSEhISEhJSUpLS0xNTU5PUFJTVVdYWVtcXl9hYmRlZ2hpbG5wcXJ0dXd5e3x9fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmampqamZiXlpaWlZaWlZaVlJSUlJSUlZSVlZWWlpaXl5iYmJiXl5eXl5aWlpaVlZWVlJSUlZWVlpaWlpaWl5eXmJiYmJmZmZmampqampqampqampqbm5ubm5ubm5ycnJycnJydnZ2dnp6enp6enp6fn5+fn5+foKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKChoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGho=";
+        const audioClick = new Audio(clickSoundData);
+        audioClick.volume = 0.4;
+
+        function playClickSound() {
+            try {
+                const clone = audioClick.cloneNode();
+                clone.volume = 0.3;
+                clone.play().catch(e => console.log("Audio play blocked by browser interaction policy"));
+            } catch (e) { }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickableElements = document.querySelectorAll('button, a, .card, .marker, .filter-btn');
+            clickableElements.forEach(el => {
+                el.addEventListener('click', playClickSound);
+            });
+        });
+
+        // --- Web Speech API (TTS - Thuyết minh giọng đọc hệ thống) ---
+        let currentUtterance = null;
+        let isPlayingId = null;
+        let modalPlayingItem = null;
+        let preferredVoice = null;
+
+        // Tự động tìm kiếm và cài đặt giọng Nữ Tiếng Việt
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            const viVoices = voices.filter(v => v.lang.includes('vi') || v.lang.includes('VI'));
+
+            if (viVoices.length > 0) {
+                // Ưu tiên tìm các giọng nữ (Microsoft HoaiMy, Google Tiếng Việt, Female...)
+                const femaleVoice = viVoices.find(v =>
+                    v.name.toLowerCase().includes('hoaimy') ||
+                    v.name.toLowerCase().includes('female') ||
+                    v.name.toLowerCase().includes('mai') ||
+                    v.name.toLowerCase().includes('ngọc') ||
+                    v.name.toLowerCase().includes('google')
+                );
+                preferredVoice = femaleVoice || viVoices[0];
+            }
+        }
+
+        // Trình duyệt load giọng nói bất đồng bộ nên cần lắng nghe sự kiện
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+        // Gọi 1 lần đề phòng cache
+        loadVoices();
+
+        function playTTS(item, btnElementId = null) {
+            // Ngừng mọi âm thanh hiện tại
+            window.speechSynthesis.cancel();
+
+            // Nếu click lại nút đang đọc thì dừng luôn
+            if (isPlayingId === item.id) {
+                isPlayingId = null;
+                modalPlayingItem = null;
+                updateTTSButtonsState();
+                return;
+            }
+
+            const textToSpeak = `${item.name}. ${item.desc} ${item.value}`;
+            currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
+            currentUtterance.lang = 'vi-VN';
+
+            // Áp dụng giọng nữ và tùy chỉnh độ mềm mại
+            if (preferredVoice) {
+                currentUtterance.voice = preferredVoice;
+            }
+            currentUtterance.rate = 0.92; // Chậm lại một chút để nghe thong thả, rõ chữ
+            currentUtterance.pitch = 1.15; // Nâng tone nhẹ để giọng thanh thoát, nữ tính hơn
+
+            currentUtterance.onstart = () => {
+                isPlayingId = item.id;
+                if (btnElementId === 'modal') modalPlayingItem = item.id;
+                updateTTSButtonsState();
+            };
+
+            currentUtterance.onend = () => {
+                isPlayingId = null;
+                modalPlayingItem = null;
+                updateTTSButtonsState();
+            };
+
+            currentUtterance.onerror = () => {
+                isPlayingId = null;
+                modalPlayingItem = null;
+                updateTTSButtonsState();
+            };
+
+            window.speechSynthesis.speak(currentUtterance);
+        }
+
+        function toggleCardTTS(event, item) {
+            event.stopPropagation(); // Ngăn sự kiện mở modal
+            playTTS(item, 'card');
+        }
+
+        // Dành riêng cho nút đọc trong Modal
+        let currentModalItem = null;
+        function playModalTTS() {
+            if (currentModalItem) playTTS(currentModalItem, 'modal');
+        }
+
+        function updateTTSButtonsState() {
+            // Nút ở các Card
+            document.querySelectorAll('.tts-btn').forEach(btn => {
+                const itemId = parseInt(btn.getAttribute('data-id'));
+                if (itemId === isPlayingId) {
+                    btn.classList.add('playing');
+                    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                } else {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '<i class="fa-solid fa-volume-up"></i>';
+                }
+            });
+
+            // Nút ở Modal
+            const modalBtn = document.getElementById('modalTtsBtn');
+            if (modalBtn) {
+                if (modalPlayingItem && modalPlayingItem === isPlayingId) {
+                    modalBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Đang đọc... (Click để dừng)';
+                    modalBtn.style.background = 'var(--accent)';
+                } else {
+                    modalBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Bật Thuyết Minh';
+                    modalBtn.style.background = 'linear-gradient(135deg, var(--accent), #E64A19)';
+                }
+            }
+        }
+
+        // Hàm điều hướng
+        function navigate(pageId) {
+            // 1. Tắt âm thanh thuyết minh
+            window.speechSynthesis.cancel();
+            isPlayingId = null;
+            updateTTSButtonsState();
+
+            // 2. Ẩn tất cả trang
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 3. Bỏ active menu
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 4. Hiện trang được chọn
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // 5. Cập nhật active menu
+            const activeLink = document.querySelector(`.nav-links a[onclick*="navigate('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            // 6. Đóng menu mobile
+            const navLinksContainer = document.getElementById('navLinks');
+            if (navLinksContainer) {
+                navLinksContainer.classList.remove('active');
+            }
+
+            // 7. Cuộn lên đầu
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // <a href="https://ibb.co/WvLmPvfW"><img src="https://i.ibb.co/xqNxfq6S/banhapchao.jpg" alt="banhapchao" border="0"></a>
+        // <a href="https://ibb.co/xPCTxkK"><img src="https://i.ibb.co/Tpv39fD/banhcuontrung.jpg" alt="banhcuontrung" border="0"></a>
+        // <a href="https://ibb.co/gZcPC4gY"><img src="https://i.ibb.co/F4d0tH7p/banhngai.jpg" alt="banhngai" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/RT52hXTS/banhtrungden.jpg" alt="banhtrungden" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/DPHCHphd/chodongkinh.jpg" alt="chodongkinh" border="0"></a>
+        // <a href="https://ibb.co/0WCFH8P"><img src="https://i.ibb.co/bys2cqp/chuatamthanh.jpg" alt="chuatamthanh" border="0"></a>
+        // <a href="https://ibb.co/B5kmDbkq"><img src="https://i.ibb.co/DHdNXhd5/comlam.jpg" alt="comlam" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/XfbVkqC0/daomauson.jpg" alt="daomauson" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/mFBpZRHZ/denbacle.jpg" alt="denbacle" border="0"></a>
+        // <a href="https://ibb.co/WNtFvWFw"><img src="https://i.ibb.co/dsg6406q/denkycung.jpg" alt="denkycung" border="0"></a>
+        // <a href="https://ibb.co/fs2vq6w"><img src="https://i.ibb.co/nFbC6dJ/denmaudongdang.jpg" alt="denmaudongdang" border="0"></a>
+        // <a href="https://ibb.co/QvnNptLT"><img src="https://i.ibb.co/d462jxFV/dentaphu.jpg" alt="dentaphu" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/6RR5yGqY/hoahoi.jpg" alt="hoahoi" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/60SRKSsg/hongbaolam.jpg" alt="hongbaolam" border="0"></a>
+        // <a href="https://ibb.co/VcFCDK4z"><img src="https://i.ibb.co/4nbSMQrX/khaunhuc.jpg" alt="khaunhuc" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/Qvj4Khjm/langvanhoaqunhson.jpg" alt="langvanhoaqunhson" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/k28580z4/lapsuon.jpg" alt="lapsuon" border="0"></a>
+        // <a href="https://ibb.co/67G4cqdK"><img src="https://i.ibb.co/MxKRyJXz/lehoikycung.jpg" alt="lehoikycung" border="0"></a>
+        // <a href="https://ibb.co/4RGp2cn2"><img src="https://i.ibb.co/GQLR9X49/lehoikycungtaphu.jpg" alt="lehoikycungtaphu" border="0"></a>
+        // <a href="https://ibb.co/h1B4GFpW"><img src="https://i.ibb.co/bRsC45pB/lehoinanhem.jpg" alt="lehoinanhem" border="0"></a>
+        // <a href="https://ibb.co/svFrKGFh"><img src="https://i.ibb.co/HDrQtsr0/letrangdinh.jpg" alt="letrangdinh" border="0"></a>
+        // <a href="https://ibb.co/fdBKNzkB"><img src="https://i.ibb.co/yFGMkc6G/manbinhgia.jpg" alt="manbinhgia" border="0"></a>
+        // <a href="https://ibb.co/B2sGYsP4"><img src="https://i.ibb.co/0yJKzJXB/mauson.jpg" alt="mauson" border="0"></a>
+        // <a href="https://ibb.co/tMNJTcn2"><img src="https://i.ibb.co/ynMQc5Kk/mauson1.jpg" alt="mauson1" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/hbSBNLr/nachilang.jpg" alt="nachilang" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/wrb4y6rf/nemnuong.jpg" alt="nemnuong" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/nNWC6Vmy/nen-1.jpg" alt="nen 1" border="0"></a>
+        // <a href="https://ibb.co/pBDRwhmk"><img src="https://i.ibb.co/Pvp9jDSV/nhatthanh.jpg" alt="nhatthanh" border="0"></a>
+        // <a href="https://ibb.co/Nd2NP8Cd"><img src="https://i.ibb.co/0Ry9Sg2R/nhithanh.jpg" alt="nhithanh" border="0"></a>
+        // <a href="https://ibb.co/prwt0t06"><img src="https://i.ibb.co/Tq2VvVvD/nui-to-thi.jpg" alt="nui-to-thi" border="0"></a>
+        // <a href="https://ibb.co/VY6cZsXy"><img src="https://i.ibb.co/B2k5x98D/phochua.jpg" alt="phochua" border="0"></a>
+        // <a href="https://ibb.co/CKSbvpmf"><img src="https://i.ibb.co/m5P9trb3/phokylua.jpg" alt="phokylua" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/zTyRdfGz/quamacmat.jpg" alt="quamacmat" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/wr3tfJPm/quytbacson.jpg" alt="quytbacson" border="0"></a>
+        // <a href="https://ibb.co/pB51jw2M"><img src="https://i.ibb.co/Vc5LY9Vz/ruoumauson.jpg" alt="ruoumauson" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/2YPj9QD9/thacbankieng.jpg" alt="thacbankieng" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/RkJQtXSC/thachden.jpg" alt="thachden" border="0"></a>
+        // <a href="https://ibb.co/NgkNbBrw"><img src="https://i.ibb.co/7xTpLmQ7/thackedau.jpg" alt="thackedau" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/VWVm1Y4Y/thanhnhamac.jpg" alt="thanhnhamac" border="0"></a>
+        // <a href="https://ibb.co/23kfGYtW"><img src="https://i.ibb.co/LdZ2VhtY/thaonguyendonglam.jpg" alt="thaonguyendonglam" border="0"></a>
+        // <a href="https://ibb.co/8gT3qtP4"><img src="https://i.ibb.co/YBY9mwfT/thunglungbacson.jpg" alt="thunglungbacson" border="0"></a>
+        // <a href="https://ibb.co/6RhmzmR2"><img src="https://i.ibb.co/ns2b9bsT/vitquaylangson.jpg" alt="vitquaylangson" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/n81s600s/xaxiu.jpg" alt="xaxiu" border="0"></a>
+        // <a href="https://ibb.co/Z1WR73qW"><img src="https://i.ibb.co/XkSfM9cS/xoingusac.jpg" alt="xoingusac" border="0"></a>
+        // <a href="https://ibb.co/G47RwLKp"><img src="https://i.ibb.co/DH4QXyxW/mang-ot.jpg" alt="mang-ot" border="0"></a>
+        // <a href="https://imgbb.com/"><img src="https://i.ibb.co/0WZt2Sd/phaive.jpg" alt="phaive" border="0"></a>
+
+        // --- 1. DỮ LIỆU THỰC TẾ (LẤY TỪ NGUỒN TÌM KIẾM UY TÍN) ---
+        const locationsData = [
+            // ================= ĐỊA DANH & DI TÍCH =================
+            { id: 1, name: "Động Tam Thanh", category: "Địa danh", icon: "fa-vihara", img: "https://i.ibb.co/bys2cqp/chuatamthanh.jpg", mapX: 46, mapY: 52, desc: "Hang động tự nhiên nổi tiếng, thuộc quần thể danh thắng Nhị – Tam Thanh. Bên trong có Chùa Tam Thanh tạc tượng Phật vào vách đá.", value: "Địa điểm văn hóa, tâm linh nổi tiếng bậc nhất của Xứ Lạng.", gmapQuery: "Chùa Tam Thanh, Tam Thanh, Lạng Sơn", isMonument: true },
+            { id: 2, name: "Động Nhị Thanh", category: "Địa danh", icon: "fa-mountain-sun", img: "https://i.ibb.co/0Ry9Sg2R/nhithanh.jpg", mapX: 47, mapY: 53, desc: "Danh thắng nổi tiếng do danh nhân Ngô Thì Sĩ khám phá và tôn tạo. Không gian hang động kỳ vĩ gắn với lịch sử và văn hóa Xứ Lạng.", value: "Quần thể danh thắng thiên nhiên kỳ thú gắn liền với thi ca.", gmapQuery: "Động Nhị Thanh, Lạng Sơn", isMonument: true },
+            { id: 3, name: "Núi Phai Vệ", category: "Địa danh", icon: "fa-flag", img: "https://i.ibb.co/0WZt2Sd/phaive.jpg", mapX: 48, mapY: 55, desc: "Núi đá nằm ngay trung tâm thành phố. Có hàng trăm bậc thang đá dẫn lên đỉnh, nơi có cột cờ Tổ quốc vút cao.", value: "Điểm ngắm toàn cảnh thành phố Lạng Sơn tuyệt đẹp từ trên cao.", gmapQuery: "Núi Phai Vệ, Lạng Sơn", isMonument: true },
+            { id: 4, name: "Nàng Tô Thị", category: "Địa danh", icon: "fa-person", img: "https://i.ibb.co/Tq2VvVvD/nui-to-thi.jpg", mapX: 42, mapY: 50, desc: "Hòn đá tự nhiên có hình dáng giống người phụ nữ bồng con. Tương truyền sự tích nàng Tô Thị bồng con chờ chồng đi đánh giặc rồi hóa đá.", value: "Biểu tượng văn hóa gắn với lòng chung thủy của người phụ nữ Việt Nam.", gmapQuery: "Núi Tô Thị, Tam Thanh, Lạng Sơn", isMonument: true },
+            { id: 5, name: "Thành Nhà Mạc", category: "Địa danh", icon: "fa-dungeon", img: "https://i.ibb.co/VWVm1Y4Y/thanhnhamac.jpg", mapX: 40, mapY: 48, desc: "Di tích kiến trúc quân sự xây dựng thế kỉ XVI, che chắn con đường độc đạo từ ải Bắc xuống phía Nam.", value: "Di tích lịch sử quan trọng thời phong kiến, có giá trị về kiến trúc.", gmapQuery: "Thành nhà Mạc, Tam Thanh, Lạng Sơn", isMonument: true },
+            { id: 6, name: "Núi Mẫu Sơn", category: "Địa danh", icon: "fa-snowflake", img: "https://i.ibb.co/ynMQc5Kk/mauson1.jpg", mapX: 70, mapY: 40, desc: "Khu vực núi cao với khí hậu đặc trưng, quanh năm mát mẻ sương mù, mùa đông thường có tuyết rơi.", value: "Trạm nghỉ dưỡng lý tưởng với cảnh quan vùng núi hùng vĩ.", gmapQuery: "Đỉnh Mẫu Sơn, Lộc Bình, Lạng Sơn", isMonument: false },
+            { id: 7, name: "Thảo nguyên Đồng Lâm", category: "Địa danh", icon: "fa-horse", img: "https://i.ibb.co/LdZ2VhtY/thaonguyendonglam.jpg", mapX: 15, mapY: 60, desc: "Nằm tại xã Hữu Liên. Không gian tuyệt đẹp với đồng cỏ xanh mướt, núi đá vôi bao quanh và những đàn ngựa gặm cỏ.", value: "Cảnh quan sinh thái đặc sắc, thiên đường cắm trại dã ngoại.", gmapQuery: "Thảo nguyên Đồng Lâm, Hữu Liên", isMonument: false },
+            { id: 8, name: "Thung lũng Bắc Sơn", category: "Địa danh", icon: "fa-seedling", img: "https://i.ibb.co/YBY9mwfT/thunglungbacson.jpg", mapX: 10, mapY: 30, desc: "Nổi tiếng với khung cảnh núi đá vôi trùng điệp ôm trọn những thảm lúa chín vàng óng ả và các bản làng người Tày.", value: "Một trong những thung lũng có cảnh quan đồng quê đẹp nhất Việt Nam.", gmapQuery: "Đỉnh Na Lay, Bắc Sơn, Lạng Sơn", isMonument: false },
+            { id: 9, name: "Sống lưng Khủng Long Phia Pò", category: "Địa danh", icon: "fa-person-hiking", img: "https://i.ibb.co/0yJKzJXB/mauson.jpg", mapX: 75, mapY: 42, desc: "Thuộc khối núi Mẫu Sơn, là cung đường trekking thử thách với cảnh quan vùng cao đặc sắc, hai bên là sườn dốc cheo leo.", value: "Điểm đến lý tưởng cho người yêu thích leo núi và khám phá thiên nhiên.", gmapQuery: "Núi Phia Pò, Lộc Bình", isMonument: false },
+            { id: 10, name: "Thác Bản Khiếng", category: "Địa danh", icon: "fa-water", img: "https://i.ibb.co/2YPj9QD9/thacbankieng.jpg", mapX: 72, mapY: 45, desc: "Thác nước hoang sơ tuyệt đẹp nằm e ấp giữa đại ngàn Mẫu Sơn.", value: "Điểm du lịch sinh thái, tắm suối mát lạnh ngày hè.", gmapQuery: "Thác Bản Khiếng, Lộc Bình", isMonument: false },
+            { id: 11, name: "Thác Khe Dầu", category: "Địa danh", icon: "fa-water", img: "https://i.ibb.co/7xTpLmQ7/thackedau.jpg", mapX: 18, mapY: 65, desc: "Thác nước tự nhiên trong xanh nằm giữa không gian núi rừng Hữu Liên.", value: "Không gian check-in thiên nhiên nguyên sơ.", gmapQuery: "Thác Khe Dầu, Hữu Liên", isMonument: false },
+            { id: 12, name: "Đền Kỳ Cùng", category: "Địa danh", icon: "fa-gopuram", img: "https://i.ibb.co/dsg6406q/denkycung.jpg", mapX: 50, mapY: 45, desc: "Nằm ngay bờ sông Kỳ Cùng, thờ Quan Lớn Tuần Tranh. Di tích tâm linh quan trọng gắn liền với đời sống tinh thần người dân.", value: "Trung tâm tín ngưỡng, nơi diễn ra lễ hội rước kiệu lớn nhất.", gmapQuery: "Đền Kỳ Cùng, Lạng Sơn", isMonument: true },
+            { id: 13, name: "Đền Tả Phủ", category: "Địa danh", icon: "fa-place-of-worship", img: "https://i.ibb.co/d462jxFV/dentaphu.jpg", mapX: 49, mapY: 46, desc: "Thờ Hán quận công Thân Công Tài - người có công mở mang phố chợ Kỳ Lừa, thúc đẩy giao thương.", value: "Di tích tín ngưỡng nổi tiếng, biểu tượng giao thương biên giới.", gmapQuery: "Đền Tả Phủ, Lạng Sơn", isMonument: true },
+            { id: 14, name: "Đền Mẫu Đồng Đăng", category: "Địa danh", icon: "fa-vihara", img: "https://i.ibb.co/nFbC6dJ/denmaudongdang.jpg", mapX: 35, mapY: 20, desc: "Địa điểm tâm linh nổi tiếng gắn với thị trấn Đồng Đăng. Thờ Phật và Mẫu Bán thiên.", value: "Di tích kiến trúc nghệ thuật và tín ngưỡng Đạo Mẫu.", gmapQuery: "Đền Mẫu Đồng Đăng", isMonument: true },
+            { id: 15, name: "Đền Công Đồng Bắc Lệ", category: "Địa danh", icon: "fa-gopuram", img: "https://i.ibb.co/mFBpZRHZ/denbacle.jpg", mapX: 20, mapY: 85, desc: "Không gian tín ngưỡng thờ Mẫu Thượng Ngàn lớn nhất vùng. Kiến trúc cổ kính hòa quyện giữa rừng núi Hữu Lũng.", value: "Di sản văn hóa tâm linh đặc sắc của tín ngưỡng thờ Mẫu.", gmapQuery: "Đền Công Đồng Bắc Lệ", isMonument: true },
+            { id: 16, name: "Phố Kỳ Lừa", category: "Địa danh", icon: "fa-shop", img: "https://i.ibb.co/m5P9trb3/phokylua.jpg", mapX: 49, mapY: 48, desc: "Không gian thương mại và văn hóa lâu đời của thành phố Lạng Sơn, nổi tiếng với chợ đêm sầm uất.", value: "Điểm trải nghiệm mua sắm và văn hóa địa phương về đêm.", gmapQuery: "Phố Kỳ Lừa, Lạng Sơn", isMonument: false },
+            { id: 17, name: "Chợ Đông Kinh", category: "Địa danh", icon: "fa-store", img: "https://i.ibb.co/DPHCHphd/chodongkinh.jpg", mapX: 50, mapY: 50, desc: "Khu vực mua sắm, giao thương lớn nhất thành phố Lạng Sơn, nơi bày bán đủ loại đặc sản và hàng hóa biên giới.", value: "Thiên đường mua sắm sầm uất, đầu mối giao thương.", gmapQuery: "Chợ Đông Kinh, Lạng Sơn", isMonument: false },
+            { id: 18, name: "Làng văn hóa Quỳnh Sơn", category: "Địa danh", icon: "fa-house-chimney-window", img: "https://i.ibb.co/Qvj4Khjm/langvanhoaqunhson.jpg", mapX: 12, mapY: 32, desc: "Làng du lịch cộng đồng tại Bắc Sơn với hàng trăm ngôi nhà sàn mái ngói âm dương truyền thống của người Tày nằm san sát nhau.", value: "Không gian bảo tồn kiến trúc nhà sàn và văn hóa dân tộc Tày.", gmapQuery: "Quỳnh Sơn, Bắc Sơn", isMonument: false },
+
+            // ================= ẨM THỰC XỨ LẠNG =================
+            { id: 50, name: "Vịt quay Lạng Sơn", category: "Ẩm thực", icon: "fa-drumstick-bite", img: "https://i.ibb.co/ns2b9bsT/vitquaylangson.jpg", mapX: 50, mapY: 60, desc: "Món ăn trứ danh với lớp da vàng bóng, thịt thơm mềm. Đặc biệt sử dụng lá mắc mật nhồi bên trong tạo hương vị núi rừng độc nhất.", value: "Tinh hoa ẩm thực Xứ Lạng, đặc sản không thể bỏ lỡ.", gmapQuery: "Vịt quay Lạng Sơn" },
+            { id: 51, name: "Khâu nhục", category: "Ẩm thực", icon: "fa-bowl-rice", img: "https://i.ibb.co/4nbSMQrX/khaunhuc.jpg", mapX: 48, mapY: 62, desc: "Thịt lợn ba chỉ hấp cách thủy chế biến vô cùng công phu cùng khoai môn, mộc nhĩ và gia vị. Thịt mềm tan trong miệng.", value: "Món ăn truyền thống đãi khách, thường có trong dịp lễ, Tết, cưới hỏi.", gmapQuery: "Nhà hàng đặc sản Lạng Sơn" },
+            { id: 52, name: "Phở chua Lạng Sơn", category: "Ẩm thực", icon: "fa-bowl-food", img: "https://i.ibb.co/B2k5x98D/phochua.jpg", mapX: 52, mapY: 58, desc: "Bánh phở trộn kết hợp thịt xá xíu, dạ dày, lạc rang, khoai lang chiên và linh hồn là nước sốt giấm chua ngọt thanh mát.", value: "Hương vị ẩm thực đường phố nổi bật.", gmapQuery: "Phở chua Lạng Sơn" },
+            { id: 53, name: "Lạp sườn Lạng Sơn", category: "Ẩm thực", icon: "fa-hotdog", img: "https://i.ibb.co/k28580z4/lapsuon.jpg", mapX: 47, mapY: 58, desc: "Làm từ thịt lợn thái hạt lựu, tẩm ướp rượu, gừng núi rồi nhồi vào ruột lợn, hun khói trên bếp củi nhiều tháng. Vị đậm đà, béo ngậy.", value: "Đặc sản hun khói truyền thống, quà biếu thiết thực.", gmapQuery: "Chợ Đông Kinh" },
+            { id: 54, name: "Bánh áp chao", category: "Ẩm thực", icon: "fa-cookie", img: "https://i.ibb.co/xqNxfq6S/banhapchao.jpg", mapX: 55, mapY: 55, desc: "Vỏ bánh làm từ bột nếp và khoai môn, nhân thịt vịt xào thơm phức. Bánh được chiên ngập dầu giòn rụm, ăn nóng hổi.", value: "Đặc sản ăn vặt mùa đông rất được ưa chuộng tại Lạng Sơn.", gmapQuery: "Bánh áp chao Lạng Sơn" },
+            { id: 55, name: "Bánh cuốn trứng", category: "Ẩm thực", icon: "fa-egg", img: "https://i.ibb.co/Tpv39fD/banhcuontrung.jpg", mapX: 45, mapY: 50, desc: "Bánh cuốn tráng mỏng, đập thêm trứng gà cuộn lại. Ăn kèm nước chấm làm từ dấm, tỏi, ớt và thịt băm xào chứ không dùng nước mắm.", value: "Món ăn sáng độc đáo mang hương vị đặc trưng riêng.", gmapQuery: "Bánh cuốn trứng Lạng Sơn" },
+            { id: 56, name: "Xôi ngũ sắc", category: "Ẩm thực", icon: "fa-plate-wheat", img: "https://i.ibb.co/XkSfM9cS/xoingusac.jpg", mapX: 20, mapY: 35, desc: "Xôi nếp dẻo thơm được nhuộm 5 màu tự nhiên từ các loại lá rừng (lá cẩm, gấc, nghệ...).", value: "Tượng trưng cho ngũ hành, thường làm trong các dịp lễ tết của đồng bào.", gmapQuery: "Lạng Sơn" },
+            { id: 57, name: "Cơm lam", category: "Ẩm thực", icon: "fa-fire-burner", img: "https://i.ibb.co/DHdNXhd5/comlam.jpg", mapX: 68, mapY: 45, desc: "Gạo nếp nương cho vào ống tre nướng trên than. Cơm dẻo, thơm mùi tre, thường ăn kèm với muối vừng hoặc thịt nướng.", value: "Món ăn mộc mạc gắn với những chuyến đi rừng, leo núi.", gmapQuery: "Mẫu Sơn" },
+            { id: 58, name: "Bánh ngải Lạng Sơn", category: "Ẩm thực", icon: "fa-leaf", img: "https://i.ibb.co/F4d0tH7p/banhngai.jpg", mapX: 40, mapY: 40, desc: "Làm từ bột nếp và lá ngải cứu đun nhừ. Bánh có màu xanh thẫm đẹp mắt, dẻo thơm, nhân vừng đường ngọt dịu, không hề bị đắng.", value: "Món quà quê thanh tao, tốt cho sức khỏe của người Tày, Nùng.", gmapQuery: "Chợ Đông Kinh" },
+            { id: 59, name: "Nem nướng Hữu Lũng", category: "Ẩm thực", icon: "fa-fire", img: "https://i.ibb.co/wrb4y6rf/nemnuong.jpg", mapX: 20, mapY: 80, desc: "Nem làm từ thịt sống lên men bọc lá chuối. Phải nướng xém lá trên than hoa mới ăn được. Vị chua chua, ngọt ngọt, thơm lừng mùi lá.", value: "Đặc sản nhậu trứ danh của vùng đất Hữu Lũng.", gmapQuery: "Hữu Lũng, Lạng Sơn" },
+            { id: 60, name: "Bánh chưng đen", category: "Ẩm thực", icon: "fa-cube", img: "https://i.ibb.co/RT52hXTS/banhtrungden.jpg", mapX: 18, mapY: 32, desc: "Bánh có màu đen do gạo nếp được trộn với tro cây núc nác. Bánh mềm dẻo, hương vị độc đáo, bảo quản được lâu.", value: "Món bánh Tết truyền thống của đồng bào Bắc Sơn.", gmapQuery: "Bắc Sơn, Lạng Sơn" },
+            { id: 61, name: "Xá xíu Lạng Sơn", category: "Ẩm thực", icon: "fa-bacon", img: "https://i.ibb.co/n81s600s/xaxiu.jpg", mapX: 51, mapY: 59, desc: "Thịt lợn tẩm ướp ngũ vị hương, mật ong và gia vị riêng rồi đem nướng hoặc rán. Là thành phần không thể thiếu của Phở chua.", value: "Món thịt đượm vị, màu đỏ bắt mắt.", gmapQuery: "Lạng Sơn" },
+
+            // ================= LỄ HỘI =================
+            { id: 80, name: "Lễ hội Ná Nhèm", category: "Lễ hội", icon: "fa-masks-theater", img: "https://i.ibb.co/bRsC45pB/lehoinanhem.jpg", mapX: 30, mapY: 35, desc: "Diễn ra tại xã Hưng Vũ. Mọi người bôi nhọ mặt để đánh lừa giặc. Lễ cung tiến 'tàng thinh' (của quý) lớn để cầu sinh sôi nảy nở.", value: "Tín ngưỡng phồn thực độc đáo, Di sản văn hóa phi vật thể.", gmapQuery: "Đình Làng Mỏ, Hưng Vũ, Bắc Sơn" },
+            { id: 81, name: "Lễ hội Đền Kỳ Cùng", category: "Lễ hội", icon: "fa-fire", img: "https://i.ibb.co/MxKRyJXz/lehoikycung.jpg", mapX: 50, mapY: 45, desc: "Lễ rước kiệu hoành tráng từ Đền Kỳ Cùng lên Đền Tả Phủ tôn vinh Quan Lớn Tuần Tranh và tri ân Thân Công Tài.", value: "Lễ hội quy mô lớn nhất Lạng Sơn dịp đầu năm.", gmapQuery: "Đền Kỳ Cùng, Lạng Sơn" },
+
+            // ================= SẢN PHẨM & HOA QUẢ =================
+            { id: 100, name: "Na Chi Lăng", category: "Sản phẩm", icon: "fa-lemon", img: "https://i.ibb.co/hbSBNLr/nachilang.jpg", mapX: 20, mapY: 70, desc: "Trồng trên núi đá vôi Chi Lăng. Quả to, mắt bống, cùi dày, ngọt sắc và ít hạt. Có hệ thống tời đưa na từ núi cao xuống.", value: "Nông sản được bảo hộ chỉ dẫn địa lý, mang lại giá trị kinh tế cao.", gmapQuery: "Chợ Na Chi Lăng" },
+            { id: 101, name: "Hoa hồi Lạng Sơn", category: "Sản phẩm", icon: "fa-star", img: "https://i.ibb.co/6RR5yGqY/hoahoi.jpg", mapX: 40, mapY: 30, desc: "Quả hình ngôi sao 8 cánh. Chứa hàm lượng tinh dầu cao, dùng làm gia vị (nấu phở), dược liệu và xuất khẩu.", value: "Sản phẩm biểu tượng, 'vàng xanh' của xứ Lạng.", gmapQuery: "Văn Quan, Lạng Sơn" },
+            { id: 102, name: "Thạch đen Tràng Định", category: "Sản phẩm", icon: "fa-cubes", img: "https://i.ibb.co/RkJQtXSC/thachden.jpg", mapX: 12, mapY: 12, desc: "Nấu từ cây sương sáo trồng tại Tràng Định. Thạch có màu đen bóng, núng nính, ăn giòn mát, giúp thanh nhiệt giải độc.", value: "Nông sản OCOP giải khát tuyệt vời ngày hè.", gmapQuery: "Tràng Định, Lạng Sơn" },
+            { id: 103, name: "Quả Mắc mật", category: "Sản phẩm", icon: "fa-leaf", img: "https://i.ibb.co/zTyRdfGz/quamacmat.jpg", mapX: 30, mapY: 50, desc: "Quả nhỏ có vị chua ngọt, mùi thơm tinh dầu đặc trưng. Cả lá và quả đều dùng làm gia vị nhồi lợn quay, vịt quay.", value: "Gia vị linh hồn làm nên đặc sắc ẩm thực Đông Bắc.", gmapQuery: "Chợ Đông Kinh" },
+            { id: 104, name: "Măng ớt ngâm mắc mật", category: "Sản phẩm", icon: "fa-pepper-hot", img: "https://i.ibb.co/DH4QXyxW/mang-ot.jpg", mapX: 49, mapY: 50, desc: "Măng tre chua giòn ngâm cùng ớt chỉ thiên cay nồng và quả mắc mật thơm lừng. Ăn kèm phở chua, vịt quay rất hao cơm.", value: "Đặc sản bình dị, món quà không thể thiếu khi đến Lạng Sơn.", gmapQuery: "Chợ Đông Kinh" },
+            { id: 105, name: "Rượu Mẫu Sơn", category: "Sản phẩm", icon: "fa-wine-bottle", img: "https://i.ibb.co/Vc5LY9Vz/ruoumauson.jpg", mapX: 70, mapY: 38, desc: "Đặc sản rượu men lá của người Dao đỏ. Chưng cất thủ công bằng nước suối tinh khiết và hơn 30 loại thảo mộc rừng.", value: "Hương vị êm dịu, mang đậm bản sắc văn hóa vùng cao.", gmapQuery: "Mẫu Sơn, Lộc Bình" },
+            { id: 106, name: "Đào Mẫu Sơn", category: "Sản phẩm", icon: "fa-peach", img: "https://i.ibb.co/XfbVkqC0/daomauson.jpg", mapX: 70, mapY: 38, desc: "Sinh trưởng trong điều kiện khí hậu lạnh giá. Quả to, cùi giòn sần sật, vị ngọt phớt chua thanh mát.", value: "Trái cây quý hiếm, đặc sản nức tiếng của đỉnh Mẫu Sơn.", gmapQuery: "Mẫu Sơn, Lộc Bình" },
+            { id: 107, name: "Quýt Bắc Sơn", category: "Sản phẩm", icon: "fa-lemon", img: "https://i.ibb.co/wr3tfJPm/quytbacson.jpg", mapX: 12, mapY: 28, desc: "Quýt trồng trên thung lũng đá vôi Bắc Sơn. Vỏ mỏng màu vàng ươm, múi mọng nước, chua ngọt đậm đà.", value: "Sản phẩm kết hợp giữa nông nghiệp và du lịch sinh thái.", gmapQuery: "Bắc Sơn, Lạng Sơn" },
+            { id: 108, name: "Hồng Bảo Lâm", category: "Sản phẩm", icon: "fa-apple-whole", img: "https://i.ibb.co/60SRKSsg/hongbaolam.jpg", mapX: 65, mapY: 70, desc: "Giống hồng giòn không hạt đặc sản. Quả màu vàng cam, thịt giòn tan, ngọt lịm. Thu hoạch vào mùa Thu.", value: "Trái cây đặc sản nổi tiếng thường mua làm quà.", gmapQuery: "Bảo Lâm, Cao Lộc" }
+        ];
+
+        // --- 3. MODULE KHÁM PHÁ ---
+        function renderExplore(data) {
+            const grid = document.getElementById('explore-grid');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 3rem; background: white; border-radius:12px;">Không tìm thấy kết quả phù hợp.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openDetail(item);
+
+                const itemJson = JSON.stringify(item).replace(/"/g, '&quot;');
+
+                card.innerHTML = `
+                    <div class="card-img" style="background-image: url('${item.img}')">
+                        <span class="card-badge">${item.category}</span>
+                    </div>
+                    <div class="card-body" style="position: relative;">
+                        <h3 class="card-title">${item.name}</h3>
+                        <p class="card-desc">${item.desc.substring(0, 90)}...</p>
+                        
+                        <button class="tts-btn" data-id="${item.id}" onclick="toggleCardTTS(event, ${itemJson})" title="Nghe giới thiệu bằng AI">
+                            <i class="fa-solid fa-volume-up"></i>
+                        </button>
+
+                        <div class="card-footer">
+                            <span class="verified-badge" title="Đã kiểm chứng thông tin"><i class="fa-solid fa-check"></i> Đã duyệt</span>
+                            <span style="color:var(--primary); cursor:pointer;">Chi tiết <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            updateTTSButtonsState();
+        }
+
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function navigateExploreFilter(category) {
+            navigate('explore');
+            filterExplore(category);
+        }
+
+        function filterExplore(category, btnElement = null) {
+            document.querySelectorAll('#explore-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                const buttons = document.querySelectorAll('#explore-filters .filter-btn');
+                for (let btn of buttons) {
+                    if (btn.innerText.includes(category) || (category === 'All' && btn.innerText === 'Tất cả')) {
+                        btn.classList.add('active');
+                        break;
+                    }
+                }
+            }
+
+            document.getElementById('searchInput').value = '';
+            let filtered = (category === 'All') ? locationsData : locationsData.filter(item => item.category === category);
+            renderExplore(filtered);
+        }
+
+        function searchExplore() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('#explore-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#explore-filters .filter-btn')[0].classList.add('active'); // active 'All'
+
+            const filtered = locationsData.filter(item =>
+                item.name.toLowerCase().includes(term) ||
+                item.desc.toLowerCase().includes(term) ||
+                item.category.toLowerCase().includes(term)
+            );
+            renderExplore(filtered);
+        }
+
+        // --- 4. MODULE MODAL CHI TIẾT ---
+        function openDetail(item) {
+            currentModalItem = item; // Lưu lại để dùng cho nút TTS
+            document.getElementById('modalTitle').innerText = item.name;
+            document.getElementById('modalIcon').innerHTML = `<img src="${item.img}" style="width:100%; height:100%; object-fit:cover;" alt="${item.name}">`;
+            document.getElementById('modalDesc').innerText = item.desc;
+            document.getElementById('modalCat').innerText = item.category;
+            document.getElementById('modalValue').innerText = item.value;
+
+            document.getElementById('detailModal').style.display = 'flex';
+            updateTTSButtonsState(); // Update trạng thái nút play trong modal
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+            // Ngừng đọc nếu đóng modal
+            window.speechSynthesis.cancel();
+            isPlayingId = null;
+            modalPlayingItem = null;
+            updateTTSButtonsState();
+        }
+
+        // --- 5. MODULE BẢN ĐỒ TƯƠNG TÁC (GOOGLE MAPS CÓ SIDEBAR) ---
+        function renderMapMarkers(category) {
+            const sidebar = document.getElementById('map-sidebar');
+            sidebar.innerHTML = '';
+
+            let data = (category === 'All') ? locationsData : locationsData.filter(item => item.category === category || (category === 'Địa danh' && item.category === 'Địa danh'));
+
+            // Sắp xếp đưa các di tích (isMonument) lên đầu danh sách
+            data.sort((a, b) => (b.isMonument ? 1 : 0) - (a.isMonument ? 1 : 0));
+
+            data.forEach(item => {
+                const mapItem = document.createElement('div');
+                mapItem.className = `map-item ${item.isMonument ? 'monument' : ''}`;
+
+                const iconColor = item.isMonument ? 'var(--accent)' : 'var(--primary)';
+                const badgeHtml = item.isMonument ? '<span class="monument-badge"><i class="fa-solid fa-star"></i> Di tích</span>' : '';
+
+                mapItem.innerHTML = `
+                    <div style="font-size: 2rem; color: ${iconColor}; width: 45px; text-align: center;">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 0.3rem; font-size: 1.05rem; color: var(--primary-dark);">${item.name} ${badgeHtml}</h4>
+                        <span style="font-size: 0.85rem; color: var(--text-light);">${item.category}</span>
+                    </div>
+                `;
+
+                mapItem.onclick = () => {
+                    playClickSound(); // Âm thanh click
+
+                    // Đổi trạng thái active
+                    document.querySelectorAll('.map-item').forEach(el => el.classList.remove('active'));
+                    mapItem.classList.add('active');
+
+                    // Cập nhật URL Google Maps Iframe (Tự động tạo iframe URL không cần API key)
+                    const iframe = document.getElementById('google-map-frame');
+                    if (item.gmapQuery) {
+                        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(item.gmapQuery)}&hl=vi&z=15&output=embed`;
+                    }
+                };
+
+                sidebar.appendChild(mapItem);
+            });
+        }
+
+        function filterMap(category, btnElement = null) {
+            document.querySelectorAll('#map .filter-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                const buttons = document.querySelectorAll('#map .filter-btn');
+                for (let btn of buttons) {
+                    if (btn.innerText.includes(category) || (category === 'All' && btn.innerText === 'Tất cả')) {
+                        btn.classList.add('active');
+                        break;
+                    }
+                }
+            }
+
+            // Trả bản đồ về tầm nhìn bao quát toàn bộ Lạng Sơn
+            const iframe = document.getElementById('google-map-frame');
+            iframe.src = `https://maps.google.com/maps?q=Lạng+Sơn,Việt+Nam&hl=vi&z=10&output=embed`;
+
+            renderMapMarkers(category);
+        }
+
+        // --- 6. MODULE AI GUIDE (TRỢ LÝ ẢO CỤC BỘ) ---
+        const chatBox = document.getElementById('chat-box');
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message ${sender === 'ai' ? 'msg-ai' : 'msg-user'}`;
+            div.innerHTML = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendQuickMessage(text) {
+            document.getElementById('ai-input').value = text;
+            sendChatMessage();
+        }
+
+        function handleChatEnter(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('ai-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            // Hiện loading
+            const loadingId = "load-" + Date.now();
+            const div = document.createElement('div');
+            div.className = 'message msg-ai';
+            div.id = loadingId;
+            div.innerHTML = '<i class="fa-solid fa-ellipsis fa-fade"></i> AI đang suy nghĩ...';
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            setTimeout(() => {
+                document.getElementById(loadingId).remove();
+                processAIResponse(text.toLowerCase());
+            }, 800);
+        }
+
+        // Thuật toán NLP cơ bản bằng JS
+        function processAIResponse(query) {
+            let response = "";
+
+            if (query.includes('1 ngày') || query.includes('một ngày') || query.includes('hành trình')) {
+                response = `<strong>Gợi ý lịch trình Lạng Sơn 1 ngày:</strong><br><br>
+                🌅 <strong>Sáng:</strong> Khám phá lịch sử tại <strong>Thành nhà Mạc</strong> và <strong>Núi Tô Thị</strong> (Gần trung tâm).<br>
+                🍲 <strong>Trưa:</strong> Nạp năng lượng với đặc sản <strong>Phở chua</strong> hoặc <strong>Vịt quay Lạng Sơn</strong>.<br>
+                🌄 <strong>Chiều:</strong> Tham quan động <strong>Tam Thanh</strong> thanh tịnh.<br>
+                <em>Để có lịch trình chi tiết và tính toán đường đi tối ưu, bạn hãy dùng công cụ <strong>Smart Trip</strong> nhé!</em>`;
+            }
+            else if (query.includes('ẩm thực') || query.includes('món ăn') || query.includes('đặc sản')) {
+                response = `Ẩm thực Lạng Sơn mang đậm bản sắc núi rừng Đông Bắc. Bạn nhất định phải thử:<br>
+                1. <strong>Vịt quay Lạng Sơn:</strong> Ướp lá mắc mật thơm lừng, da giòn.<br>
+                2. <strong>Khâu nhục:</strong> Thịt ba chỉ hấp cách thủy truyền thống người Tày, Nùng.<br>
+                3. <strong>Phở chua:</strong> Món phở trộn với nước sốt giấm chua thanh mát.<br>
+                4. <strong>Bánh áp chao:</strong> Ăn vặt mùa đông với nhân thịt vịt.<br>
+                Bạn có thể qua mục Khám phá để xem chi tiết từng món.`;
+            }
+            else if (query.includes('di tích') || query.includes('lịch sử') || query.includes('địa danh')) {
+                response = `Lạng Sơn tự hào với nhiều di tích lịch sử oai hùng:<br>
+                 - <strong>Ải Chi Lăng:</strong> Nơi ghi dấu chiến công chém Liễu Thăng thời kháng Minh.<br>
+                 - <strong>Thành nhà Mạc:</strong> Căn cứ quân sự thế kỷ 16.<br>
+                 - <strong>Thành cổ Lạng Sơn:</strong> Trung tâm giao thương thời phong kiến.<br>
+                 Các điểm này không chỉ có giá trị lịch sử mà cảnh quan thiên nhiên cũng rất đẹp.`;
+            }
+            else if (query.includes('ná nhèm') || query.includes('lễ hội')) {
+                response = `<strong>Lễ hội Ná Nhèm</strong> diễn ra vào Rằm tháng Giêng tại xã Hưng Vũ. Đây là lễ hội vô cùng độc đáo vì người tham gia sẽ bôi nhọ mặt (để lừa hồn ma giặc) và rước các "tàng thinh" (của quý) cỡ lớn cầu mong sự sinh sôi nảy nở. Đây là Di sản văn hóa phi vật thể cấp quốc gia đấy!`;
+            }
+            else if (query.includes('giá') || query.includes('bao nhiêu')) {
+                response = `Về giá cả đặc sản (tham khảo):<br>
+                 - <strong>Vịt quay Lạng Sơn:</strong> Thường dao động từ 150.000đ - 200.000đ/con tùy kích cỡ.<br>
+                 - <strong>Phở chua:</strong> Khoảng 35.000đ - 50.000đ/bát.<br>
+                 - <strong>Hồng Bảo Lâm:</strong> Khoảng 30.000đ - 50.000đ/kg vào mùa thu hoạch.<br>
+                 <em>Giá có thể thay đổi tùy thời điểm, nhưng nhìn chung du lịch Lạng Sơn rất phải chăng.</em>`;
+            }
+            else {
+                response = `Tôi đã nhận được câu hỏi. Tuy nhiên cơ sở dữ liệu hiện tại chưa khớp với yêu cầu của bạn. <br><br>
+                Bạn có thể thử hỏi các từ khóa: <strong>"Đặc sản", "Di tích lịch sử", "Hành trình 1 ngày", "Lễ hội Ná Nhèm"</strong> để tôi phục vụ tốt nhất. Dữ liệu của tôi được đảm bảo chính xác bởi học sinh biên soạn.`;
+            }
+
+            addMessage(response, 'ai');
+        }
+
+        // --- 7. MODULE SMART TRIP ---
+        function generateTrip() {
+            const time = document.getElementById('trip-time').value;
+            const interest = document.getElementById('trip-interest').value;
+            const resultDiv = document.getElementById('trip-result');
+
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div style="text-align:center; padding: 3rem;"><i class="fa-solid fa-spinner fa-spin fa-3x" style="color:var(--primary);"></i><br><br><span style="font-size: 1.1rem; color: var(--text-dark);">AI đang phân tích khoảng cách và lên thực đơn các bữa ăn...</span></div>';
+
+            setTimeout(() => {
+                let html = `<h3 style="color:var(--primary-dark); margin-bottom: 1.5rem;"><i class="fa-solid fa-map-location-dot"></i> Lộ trình đề xuất tối ưu</h3>`;
+                let statDuration = '';
+                let statSpots = '';
+                let statGreen = '90%';
+
+                if (time === 'half') {
+                    statDuration = '4 giờ'; statSpots = '3';
+                    html += `
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-regular fa-clock"></i> 08:00 - 09:30</div>
+                            <strong style="font-size:1.1rem;">Tham quan Thành Nhà Mạc & Núi Tô Thị</strong><br>
+                            <span style="color:#666;">Hai điểm này nằm gần nhau. Đi bộ ngắm toàn cảnh thành phố buổi sáng sớm là lý tưởng nhất.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-regular fa-clock"></i> 09:45 - 11:00</div>
+                            <strong style="font-size:1.1rem;">Khám phá Chùa - Động Tam Thanh</strong><br>
+                            <span style="color:#666;">Di chuyển một đoạn ngắn, tránh được nắng nóng khi vào thăm động thạch nhũ mát lạnh.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-utensils"></i> 11:30 - Ăn trưa</div>
+                            <strong style="font-size:1.1rem;">Thưởng thức Phở Chua Lạng Sơn</strong><br>
+                            <span style="color:#666;">Gợi ý: Các quán trên phố Lê Lai. Món ăn thanh mát nạp lại năng lượng kết thúc chuyến đi.</span>
+                        </div>
+                    `;
+                } else if (time === '1') {
+                    statDuration = '1 Ngày'; statSpots = '5';
+                    html += `
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-mug-saucer"></i> 07:30 - Ăn sáng</div>
+                            <strong style="font-size:1.1rem;">Bánh cuốn trứng Lạng Sơn</strong><br>
+                            <span style="color:#666;">Gợi ý: Quán bánh cuốn bà Tuyết/Thu Hằng. Đặc trưng với nước dùng dấm tỏi chua ngọt.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-regular fa-clock"></i> 08:30 - 11:00</div>
+                            <strong style="font-size:1.1rem;">Cụm di tích: Tam Thanh, Nhị Thanh & Núi Tô Thị</strong><br>
+                            <span style="color:#666;">Bắt đầu ngày mới tại cụm biểu tượng văn hóa của xứ Lạng.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-utensils"></i> 11:30 - Ăn trưa</div>
+                            <strong style="font-size:1.1rem;">Vịt quay Lạng Sơn & Khâu Nhục</strong><br>
+                            <span style="color:#666;">Tìm một quán dọc phố Bắc Sơn thưởng thức bữa trưa đậm chất Đông Bắc.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-regular fa-clock"></i> 14:00 - 15:30</div>
+                            <strong style="font-size:1.1rem;">Đền Kỳ Cùng & Đền Tả Phủ</strong><br>
+                            <span style="color:#666;">Tìm hiểu tín ngưỡng Đạo Mẫu và người có công mở mang phố chợ Kỳ Lừa.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-cart-shopping"></i> 16:00 - 17:30</div>
+                            <strong style="font-size:1.1rem;">Mua sắm Chợ Đông Kinh & Đặc sản</strong><br>
+                            <span style="color:#666;">Mua Măng ớt, Lạp sườn, Hoa hồi hoặc Hồng Bảo Lâm làm quà.</span>
+                        </div>
+                    `;
+                } else if (time === '2') {
+                    statDuration = '2N1Đ'; statSpots = '7+'; statGreen = '92%';
+                    html += `
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem;">NGÀY 1: TRUNG TÂM THÀNH PHỐ & ĐỈNH MẪU SƠN</div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-mug-saucer"></i> Sáng</div>
+                            <strong style="font-size:1.1rem;">Ăn sáng Bánh cuốn trứng & Khám phá Động Tam Thanh</strong><br>
+                            <span style="color:#666;">Khởi đầu nhẹ nhàng tại trung tâm thành phố.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-utensils"></i> Trưa</div>
+                            <strong style="font-size:1.1rem;">Ăn Phở chua Lạng Sơn & Di chuyển đi Mẫu Sơn</strong><br>
+                            <span style="color:#666;">Quãng đường khoảng 30km lên núi, đường dốc quanh co nên cần đi sớm.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-regular fa-clock"></i> Chiều & Tối</div>
+                            <strong style="font-size:1.1rem;">Ngắm hoàng hôn Mẫu Sơn, Nhậu Lợn quay & Rượu Mẫu Sơn</strong><br>
+                            <span style="color:#666;">Check-in các khu biệt thự Pháp cổ, tận hưởng không khí lạnh và dùng bữa tối đặc biệt.</span>
+                        </div>
+                        
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2rem;">NGÀY 2: MUA SẮM CỬA KHẨU & TÂM LINH</div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-sun"></i> Sáng</div>
+                            <strong style="font-size:1.1rem;">Hạ sơn & Viếng Đền Mẫu Đồng Đăng</strong><br>
+                            <span style="color:#666;">Xuống núi và ghé thăm ngôi đền linh thiêng bậc nhất vùng biên giới.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time"><i class="fa-solid fa-cart-shopping"></i> Trưa</div>
+                            <strong style="font-size:1.1rem;">Chợ Đông Kinh & Ăn Vịt quay</strong><br>
+                            <span style="color:#666;">Thỏa thích mua sắm hàng hóa biên giới, đặc sản và dùng bữa trưa thịnh soạn trước khi về.</span>
+                        </div>
+                    `;
+                } else if (time === '3') {
+                    statDuration = '3N2Đ'; statSpots = '10+'; statGreen = '95%';
+                    html += `
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem;">NGÀY 1: DẤU ẤN LỊCH SỬ THÀNH PHỐ</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Sáng: Ải Chi Lăng & Trung tâm TP</strong><br>
+                            <span style="color:#666;">Ghé thăm Ải Chi Lăng hào hùng trên đường đến Lạng Sơn. Tới TP nhận phòng.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Chiều & Tối: Cụm Tam Thanh - Tô Thị - Kỳ Lừa</strong><br>
+                            <span style="color:#666;">Tham quan động, mua sắm chợ đêm Kỳ Lừa. Thưởng thức <b>Bánh áp chao</b> và <b>Phở chua</b>.</span>
+                        </div>
+                        
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2rem;">NGÀY 2: THUNG LŨNG BẮC SƠN KỲ VĨ</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Sáng: Di chuyển Bắc Sơn & Đỉnh Na Lay</strong><br>
+                            <span style="color:#666;">Leo đỉnh Na Lay ngắm toàn cảnh thung lũng lúa chín (đẹp nhất tháng 7 hoặc tháng 10).</span>
+                        </div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Chiều & Tối: Làng Văn Hóa Quỳnh Sơn</strong><br>
+                            <span style="color:#666;">Ngủ homestay nhà sàn người Tày. Ăn tối với <b>Xôi ngũ sắc, Cơm lam, Gà nướng</b>.</span>
+                        </div>
+                        
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2rem;">NGÀY 3: TRẢI NGHIỆM SINH THÁI</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Sáng: Thảo nguyên Đồng Lâm (Hữu Liên)</strong><br>
+                            <span style="color:#666;">Trekking, cắm trại, chèo thuyền Kayak trên thảo nguyên có bầy ngựa chăn thả.</span>
+                        </div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Trưa: Nem nướng Hữu Lũng & Lên đường về</strong><br>
+                            <span style="color:#666;">Thưởng thức đặc sản chua ngọt lên men tự nhiên trước khi kết thúc hành trình.</span>
+                        </div>
+                    `;
+                } else if (time === '4') {
+                    statDuration = '4N3Đ'; statSpots = '15+'; statGreen = '98%';
+                    html += `
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem;">NGÀY 1: TRUNG TÂM & TÂM LINH (TP. LẠNG SƠN)</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Hoạt động:</strong> Viếng Đền Kỳ Cùng, Đền Tả Phủ. Thăm Động Tam Thanh, Nhị Thanh.<br>
+                            <strong style="font-size:1.0rem; color: var(--accent);">Ẩm thực:</strong> Sáng Bánh cuốn trứng, Trưa Vịt quay, Tối ăn vặt Chợ đêm Kỳ Lừa.
+                        </div>
+                        
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2rem;">NGÀY 2: SĂN MÂY MẪU SƠN (LỘC BÌNH)</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Hoạt động:</strong> Lên đỉnh Mẫu Sơn, ngắm biệt thự cổ, trekking nhẹ thác Bản Khiếng. Hoặc thử thách "Sống lưng khủng long Phia Pò" (nếu có thể lực).<br>
+                            <strong style="font-size:1.0rem; color: var(--accent);">Ẩm thực:</strong> Lợn quay, Đào Mẫu Sơn, sưởi ấm với Rượu men lá Mẫu Sơn.
+                        </div>
+                        
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2rem;">NGÀY 3: VĂN HÓA BẢN ĐỊA (BẮC SƠN)</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Hoạt động:</strong> Di chuyển sang Bắc Sơn. Thăm di tích khởi nghĩa, check-in thung lũng, sống chậm tại Làng Quỳnh Sơn.<br>
+                            <strong style="font-size:1.0rem; color: var(--accent);">Ẩm thực:</strong> Bánh chưng đen, Xôi ngũ sắc, Quýt Bắc Sơn (nếu đúng mùa thu).
+                        </div>
+                        
+                        <div style="background: var(--primary-light); color: var(--primary-dark); padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2rem;">NGÀY 4: THIÊN NHIÊN HOANG SƠ (HỮU LŨNG - CHI LĂNG)</div>
+                        <div class="timeline-item">
+                            <strong style="font-size:1.1rem;">Hoạt động:</strong> Sáng khám phá Thảo nguyên Đồng Lâm xanh mướt. Trưa di chuyển về Ải Chi Lăng chụp ảnh.<br>
+                            <strong style="font-size:1.0rem; color: var(--accent);">Ẩm thực:</strong> Nem nướng Hữu Lũng, mua Na Chi Lăng (nếu đi dịp Hè) làm quà và lên đường về.
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="trip-summary">
+                        <div class="trip-stat">
+                            <strong>${statDuration}</strong>
+                            Thời lượng
+                        </div>
+                        <div class="trip-stat">
+                            <strong>${statSpots}</strong>
+                            Điểm đến
+                        </div>
+                        <div class="trip-stat">
+                            <strong style="color:#4CAF50;"><i class="fa-solid fa-leaf"></i> ${statGreen}</strong>
+                            Tiêu chí Xanh
+                        </div>
+                    </div>
+                `;
+
+                resultDiv.innerHTML = html;
+                showToast("Đã thiết lập lộ trình thành công!");
+            }, 1500);
+        }
+
+        // --- 8. MODULE GAMIFICATION (CHALLENGE) ---
+        // Âm thanh Game bằng Web Audio API (Tạo âm thanh bằng tần số toán học - Tinh thần STEM)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let gameAudioCtx;
+
+        function initAudio() {
+            if (!gameAudioCtx) {
+                gameAudioCtx = new AudioContext();
+            }
+            if (gameAudioCtx.state === 'suspended') {
+                gameAudioCtx.resume();
+            }
+        }
+
+        function playTone(freq, type, duration, vol = 0.1) {
+            initAudio();
+            const oscillator = gameAudioCtx.createOscillator();
+            const gainNode = gameAudioCtx.createGain();
+
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, gameAudioCtx.currentTime);
+
+            gainNode.gain.setValueAtTime(vol, gameAudioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, gameAudioCtx.currentTime + duration);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(gameAudioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(gameAudioCtx.currentTime + duration);
+        }
+
+        function playCorrectSound() {
+            playTone(523.25, 'sine', 0.1, 0.15); // Nốt Đô
+            setTimeout(() => playTone(659.25, 'sine', 0.2, 0.15), 100); // Nốt Mi
+        }
+
+        function playWrongSound() {
+            playTone(200, 'sawtooth', 0.2, 0.1);
+            setTimeout(() => playTone(120, 'sawtooth', 0.3, 0.1), 150);
+        }
+
+        function playWinSound() {
+            playTone(523.25, 'square', 0.15, 0.05); // Nốt Đô
+            setTimeout(() => playTone(659.25, 'square', 0.15, 0.05), 150); // Nốt Mi
+            setTimeout(() => playTone(783.99, 'square', 0.15, 0.05), 300); // Nốt Son
+            setTimeout(() => playTone(1046.50, 'square', 0.4, 0.05), 450); // Nốt Đô (quãng 8)
+        }
+
+        const quizData = {
+            knowledge: [
+                { q: "Hòn đá Vọng Phu trên Núi Tô Thị gắn liền với câu chuyện về?", options: ["Lòng chung thủy chờ chồng", "Tình cảm anh em", "Kháng chiến chống giặc", "Nữ tướng dũng cảm"], answer: 0, exp: "Đá Vọng Phu là biểu tượng cho lòng chung thủy của nàng Tô Thị bồng con chờ chồng đến hóa đá." },
+                { q: "Thành nhà Mạc được xây dựng vào thế kỷ nào?", options: ["Thế kỷ 15", "Thế kỷ 16", "Thế kỷ 17", "Thế kỷ 18"], answer: 1, exp: "Thành nhà Mạc là căn cứ quân sự được xây dựng vào thế kỷ 16 để chắn con đường độc đạo từ ải Bắc xuống phía Nam." },
+                { q: "Ải Chi Lăng nổi tiếng với chiến công chống giặc nào?", options: ["Quân Thanh", "Quân Tống", "Quân Nguyên Mông", "Quân Minh (Liễu Thăng)"], answer: 3, exp: "Chi Lăng là một cửa ải hiểm trở, gắn liền với trận đánh chém đầu tướng giặc Liễu Thăng của quân Minh." },
+                { q: "\"Đồng Lâm\" là tên của một địa danh nổi tiếng với dạng địa hình gì tại huyện Hữu Liên?", options: ["Thảo nguyên", "Hang động", "Đảo trên hồ", "Bãi biển nhân tạo"], answer: 0, exp: "Thảo nguyên Đồng Lâm nổi tiếng với đồng cỏ xanh mướt, núi đá vôi bao quanh và những đàn ngựa chăn thả tự nhiên." },
+                { q: "Đỉnh núi nào được mệnh danh là \"Sống lưng Khủng Long\" ở Lạng Sơn?", options: ["Núi Mẫu Sơn", "Núi Phia Pò", "Núi Phai Vệ", "Núi Tô Thị"], answer: 1, exp: "Sống lưng Khủng Long Phia Pò là cung đường trekking đầy thử thách thuộc khối núi Mẫu Sơn, với hai bên sườn dốc cheo leo." },
+                { q: "Trong Lễ hội Đền Kỳ Cùng, kiệu linh đình được rước lên đền nào để tri ân Hán quận công Thân Công Tài?", options: ["Đền Công Đồng Bắc Lệ", "Đền Mẫu Đồng Đăng", "Đền Tả Phủ", "Chùa Tam Thanh"], answer: 2, exp: "Lễ hội diễn ra cuối tháng Giêng, rước kiệu từ Đền Kỳ Cùng lên đền Tả Phủ, là lễ hội quy mô lớn nhất Lạng Sơn đầu năm." },
+                { q: "Động Tam Thanh nằm trong quần thể danh thắng nào?", options: ["Đồng Lâm - Hữu Liên", "Nhị - Tam Thanh", "Bắc Sơn", "Mẫu Sơn"], answer: 1, exp: "Động Tam Thanh là hang động tự nhiên nổi tiếng, nằm trong quần thể danh thắng Nhị – Tam Thanh ngay tại TP Lạng Sơn." },
+                { q: "Lễ hội Ná Nhèm ở xã Hưng Vũ có đặc trưng gì nổi bật?", options: ["Đua thuyền trên sông", "Bôi nhọ mặt", "Múa rối nước", "Thi hát Quan họ"], answer: 1, exp: "Mọi người tham gia lễ hội Ná Nhèm đều bôi nhọ mặt để đánh lừa hồn ma giặc, đây là di sản văn hóa phi vật thể cấp quốc gia." },
+                { q: "Cột cờ Tổ quốc vút cao nằm trên đỉnh núi đá nào ngay tại trung tâm TP Lạng Sơn?", options: ["Núi Phai Vệ", "Núi Tô Thị", "Núi Mẫu Sơn", "Đỉnh Na Lay"], answer: 0, exp: "Núi Phai Vệ nằm ngay trung tâm thành phố với hàng trăm bậc thang đá dẫn lên đỉnh, nơi có cột cờ Tổ quốc." }
+            ],
+            food: [
+                { q: "Món Vịt quay Lạng Sơn thường được ướp với loại lá đặc trưng nào?", options: ["Lá lốt", "Lá mắc mật (móc mật)", "Lá chanh", "Lá giang"], answer: 1, exp: "Lá mắc mật cùng với hạt dổi là linh hồn tạo nên mùi thơm đặc trưng không thể nhầm lẫn của món vịt quay xứ Lạng." },
+                { q: "Thành phần tạo nên vị chua thanh của món 'Phở chua' là gì?", options: ["Chanh", "Me", "Giấm tỏi pha mỡ lợn", "Sấu"], answer: 2, exp: "Nước sốt phở chua Lạng Sơn được pha đặc biệt từ giấm, đường, tỏi và đặc biệt là mỡ lợn thơm để tạo vị chua ngọt thanh mát." },
+                { q: "Hồng không hạt Bảo Lâm thu hoạch chủ yếu vào thời gian nào?", options: ["Tháng 1-2", "Tháng 4-5", "Tháng 6-7", "Tháng 9-11"], answer: 3, exp: "Đặc sản Hồng giòn không hạt Bảo Lâm có mùa thu hoạch rộ vào mùa Thu (Tháng 9 đến tháng 11)." },
+                { q: "Loại hoa quả nổi tiếng của huyện Chi Lăng được trồng trên vách núi đá vôi là gì?", options: ["Lê", "Mận", "Na", "Đào"], answer: 2, exp: "Na Chi Lăng là nông sản nổi tiếng, quả to, mắt bống, vị ngọt đậm và đã được bảo hộ chỉ dẫn địa lý." },
+                { q: "\"Vàng xanh\" của xứ Lạng, một loại quả hình ngôi sao 8 cánh dùng làm gia vị và tinh dầu là gì?", options: ["Quả Thảo quả", "Quả Mắc mật", "Hoa hồi", "Hạt dẻ"], answer: 2, exp: "Hoa hồi Lạng Sơn có hình ngôi sao 8 cánh, là sản phẩm đặc trưng xuất khẩu chủ lực, dùng trong thực phẩm và dược liệu." },
+                { q: "Món \"Khâu nhục\" truyền thống chủ yếu được làm từ nguyên liệu gì?", options: ["Thịt bò", "Thịt lợn ba chỉ", "Thịt gà", "Cá suối"], answer: 1, exp: "Khâu nhục là món thịt lợn ba chỉ hấp cách thủy chế biến vô cùng công phu, mềm tan trong miệng, thường có trong dịp lễ, Tết." },
+                { q: "Loại bánh chiên giòn từ bột nếp, khoai lang và nhân thịt vịt ăn vào mùa lạnh ở Lạng Sơn gọi là gì?", options: ["Bánh chưng đen", "Bánh cuốn trứng", "Bánh áp chao", "Bánh ngải"], answer: 2, exp: "Bánh áp chao là món ăn vặt đặc trưng của Lạng Sơn vào mùa đông, có lớp vỏ giòn và nhân thịt vịt tẩm gia vị thơm lừng." },
+                { q: "Bánh cuốn trứng Lạng Sơn thường được ăn kèm với nước chấm gì?", options: ["Nước mắm chua ngọt", "Nước dấm tỏi, thịt băm", "Nước tương", "Mắm tôm"], answer: 1, exp: "Thay vì nước mắm thông thường, bánh cuốn trứng Lạng Sơn được chan bằng nước dấm tỏi kết hợp với thịt băm đặc trưng." },
+                { q: "Thạch đen, một món ăn thanh nhiệt nổi tiếng, là đặc sản của vùng nào ở Lạng Sơn?", options: ["Mẫu Sơn", "Tràng Định", "Hữu Lũng", "Cao Lộc"], answer: 1, exp: "Thạch đen Tràng Định làm từ cây thạch đen trồng tại địa phương, có màu đen bóng, vị ngọt mát, giúp thanh nhiệt giải độc." }
+            ]
+        };
+
+        let currentQuiz = [];
+        let currentQIndex = 0;
+        let score = 0;
+
+        function startQuiz(type) {
+            document.getElementById('game-selection').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('quiz-content').style.display = 'block';
+
+            document.getElementById('quiz-title').innerHTML = type === 'knowledge'
+                ? "<i class='fa-solid fa-brain'></i> Giải Mã Địa Danh"
+                : "<i class='fa-solid fa-utensils'></i> Vua Ẩm Thực";
+
+            // Xáo trộn toàn bộ kho câu hỏi
+            let allQuestions = [...quizData[type]];
+            allQuestions.sort(() => Math.random() - 0.5);
+
+            // Chỉ lấy ngẫu nhiên 5 câu cho mỗi lượt chơi
+            currentQuiz = allQuestions.slice(0, 5);
+
+            currentQIndex = 0;
+            score = 0;
+            document.getElementById('score').innerText = score;
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            document.getElementById('explanation-box').style.display = 'none';
+
+            const progress = (currentQIndex / currentQuiz.length) * 100;
+            document.getElementById('quiz-progress').style.width = progress + '%';
+
+            const q = currentQuiz[currentQIndex];
+            document.getElementById('question-text').innerText = `Câu ${currentQIndex + 1}: ${q.q}`;
+
+            const optionsArea = document.getElementById('options-area');
+            optionsArea.innerHTML = '';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsArea.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.style.pointerEvents = 'none');
+
+            const q = currentQuiz[currentQIndex];
+            const isCorrect = selectedIndex === q.answer;
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                score += 100;
+                document.getElementById('score').innerText = score;
+                showToast("Tuyệt vời! +100 điểm");
+                playCorrectSound();
+            } else {
+                btnElement.classList.add('wrong');
+                document.querySelectorAll('.option-btn')[q.answer].classList.add('correct');
+                playWrongSound();
+            }
+
+            document.getElementById('explanation-text').innerText = q.exp;
+            document.getElementById('explanation-box').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < currentQuiz.length) {
+                loadQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'block';
+            document.getElementById('quiz-progress').style.width = '100%';
+
+            playWinSound();
+
+            const maxScore = currentQuiz.length * 100;
+            document.getElementById('final-score').innerText = `${score} / ${maxScore}`;
+
+            const rankBadge = document.getElementById('rank-badge');
+            if (score === maxScore) {
+                rankBadge.innerText = "ĐẠI SỨ VĂN HÓA XỨ LẠNG";
+                rankBadge.style.background = "#FFC107";
+                rankBadge.style.color = "white";
+            } else if (score >= maxScore / 2) {
+                rankBadge.innerText = "NGƯỜI AM HIỂU";
+                rankBadge.style.background = "#4CAF50";
+                rankBadge.style.color = "white";
+            } else {
+                rankBadge.innerText = "TÂN BINH KHÁM PHÁ";
+                rankBadge.style.background = "#9E9E9E";
+                rankBadge.style.color = "white";
+            }
+        }
+
+        // --- 9. TÍNH NĂNG WOW (GIỚI THIỆU NHANH KÈM TTS) ---
+        let isDemoRunning = false;
+        let utteranceLangSon = null;
+        let utteranceApp = null;
+
+        function initDemoSpeech() {
+            if (utteranceLangSon && utteranceApp) return;
+
+            const textLangSon = "Chào mừng bạn đến với vùng đất phên dậu thiêng liêng của Tổ quốc. Lạng Sơn không chỉ nổi tiếng với Ải Chi Lăng hào hùng, núi Tô Thị chờ chồng, động Tam Thanh huyền bí, mà còn làm say lòng du khách bởi ẩm thực trứ danh như Vịt quay mắc mật, Phở chua và Hoa hồi xứ Lạng.";
+            const textApp = "Để giúp bạn khám phá dễ dàng hơn, chúng mình đã tạo ra ứng dụng Khám Phá Lạng Sơn 4.0 AI Guide. Ứng dụng tích hợp bản đồ tương tác, trợ lý trí tuệ nhân tạo và các trò chơi thử thách kiến thức, giúp bạn trải nghiệm văn hóa một cách trực quan và sinh động nhất.";
+
+            utteranceLangSon = new SpeechSynthesisUtterance(textLangSon);
+            utteranceLangSon.lang = 'vi-VN';
+            if (preferredVoice) utteranceLangSon.voice = preferredVoice;
+            utteranceLangSon.rate = 0.92;
+            utteranceLangSon.pitch = 1.15;
+
+            utteranceApp = new SpeechSynthesisUtterance(textApp);
+            utteranceApp.lang = 'vi-VN';
+            if (preferredVoice) utteranceApp.voice = preferredVoice;
+            utteranceApp.rate = 0.92;
+            utteranceApp.pitch = 1.15;
+
+            // Xong phần Lạng Sơn thì tự động đọc tiếp phần Ứng dụng
+            utteranceLangSon.onend = () => {
+                if (isDemoRunning) {
+                    window.speechSynthesis.speak(utteranceApp);
+                }
+            };
+
+            // Kết thúc toàn bộ
+            utteranceApp.onend = () => {
+                resetWowDemoBtn();
+            };
+
+            utteranceLangSon.onerror = resetWowDemoBtn;
+            utteranceApp.onerror = resetWowDemoBtn;
+        }
+
+        function resetWowDemoBtn() {
+            isDemoRunning = false;
+            const btn = document.getElementById('btn-wow');
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> GIỚI THIỆU NHANH';
+                btn.classList.remove('active');
+            }
+        }
+
+        function runWowDemo() {
+            if (isDemoRunning) {
+                // Nếu đang chạy thì dừng lại
+                window.speechSynthesis.cancel();
+                resetWowDemoBtn();
+                return;
+            }
+
+            initDemoSpeech(); // Khởi tạo giọng đọc nếu chưa có
+
+            isDemoRunning = true;
+            const btn = document.getElementById('btn-wow');
+            btn.innerHTML = '<i class="fa-solid fa-stop"></i> ĐANG GIỚI THIỆU... (BẤM ĐỂ DỪNG)';
+            btn.classList.add('active');
+
+            // Hủy các giọng đọc khác đang chạy (ở mục khám phá)
+            window.speechSynthesis.cancel();
+            isPlayingId = null;
+            updateTTSButtonsState();
+
+            // Bắt đầu đọc giới thiệu Lạng Sơn trước
+            window.speechSynthesis.speak(utteranceLangSon);
+        }
+
+        // --- Tính năng Kéo & Ẩn/Hiện nhóm nút trôi nổi ---
+        const floatingContainer = document.getElementById('floating-buttons-container');
+        const dragHandle = document.getElementById('drag-handle');
+        const showBtn = document.getElementById('show-floating-btn');
+
+        function toggleFloatingButtons() {
+            floatingContainer.classList.toggle('hidden');
+            showBtn.classList.toggle('visible');
+        }
+
+        // Logic Kéo thả (Draggable)
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        dragHandle.addEventListener("mousedown", dragStart);
+        dragHandle.addEventListener("touchstart", dragStart, { passive: false });
+
+        document.addEventListener("mouseup", dragEnd);
+        document.addEventListener("touchend", dragEnd);
+
+        document.addEventListener("mousemove", drag);
+        document.addEventListener("touchmove", drag, { passive: false });
+
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+
+            if (e.target === dragHandle || dragHandle.contains(e.target)) {
+                // Đảm bảo không kéo khi click vào nút X
+                if (e.target.closest('.close-floating')) return;
+                isDragging = true;
+            }
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault(); // Ngăn cuộn trang trên mobile khi kéo
+
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+
+                xOffset = currentX;
+                yOffset = currentY;
+
+                setTranslate(currentX, currentY, floatingContainer);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+
+        // --- Nút mở Chat AI nhanh ---
+        function openQuickChat() {
+            // Tắt âm thanh nếu đang có bài giới thiệu nhanh chạy hoặc thuyết minh
+            if (isDemoRunning) {
+                runWowDemo(); // Gọi hàm này một lần nữa sẽ tự động ngắt giới thiệu
+            } else {
+                window.speechSynthesis.cancel();
+                isPlayingId = null;
+                updateTTSButtonsState();
+            }
+
+            // Chuyển hướng đến module AI Guide
+            navigate('ai-guide');
+
+            // Tạo độ trễ nhỏ để DOM chuyển trang, sau đó đưa trỏ chuột (focus) vào input
+            setTimeout(() => {
+                const aiInput = document.getElementById('ai-input');
+                if (aiInput) {
+                    aiInput.focus();
+                }
+                // Tự động cuộn xuống dưới cùng chatbox
+                const chatBox = document.getElementById('chat-box');
+                if (chatBox) {
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+                showToast("Trợ lý AI đã sẵn sàng!");
+            }, 300);
+        }
+
+        // --- 10. TÍNH NĂNG MENU KHÁM PHÁ NGAY ---
+        function toggleExploreDropdown(e) {
+            e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
+            playClickSound();
+            const menu = document.getElementById('explore-dropdown-menu');
+
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'flex';
+                // Animation mượt mà bằng JS
+                menu.animate([
+                    { opacity: 0, transform: 'translateY(-15px) scale(0.95)' },
+                    { opacity: 1, transform: 'translateY(0) scale(1)' }
+                ], { duration: 250, easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' });
+            } else {
+                menu.style.display = 'none';
+            }
+        }
+
+        function goAndFilterExplore(category, e) {
+            e.preventDefault();
+            e.stopPropagation();
+            playClickSound();
+
+            // 1. Ẩn menu dropdown
+            document.getElementById('explore-dropdown-menu').style.display = 'none';
+
+            // 2. Chuyển sang trang Khám Phá
+            navigate('explore');
+
+            // 3. Tự động gọi hàm lọc dữ liệu với độ trễ ngắn (để đảm bảo trang đã render xong)
+            setTimeout(() => {
+                filterExplore(category);
+                showToast(`Đang xem danh mục: ${category}`);
+
+                // Tự động cuộn xuống phần bộ lọc
+                document.getElementById('explore-filters').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+
+        // Tự động đóng Menu Dropdown khi click chuột ra vùng khác trên màn hình
+        document.addEventListener('click', function (e) {
+            const menu = document.getElementById('explore-dropdown-menu');
+            const btn = document.getElementById('btn-explore-dropdown');
+            if (menu && menu.style.display === 'flex') {
+                if (btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.style.display = 'none';
+                }
+            }
+        });
+
+        // Khởi tạo ban đầu
+        window.onload = () => {
+            // Khôi phục các hình ảnh cá nhân hóa đã lưu trong LocalStorage
+            const customImages = JSON.parse(localStorage.getItem('ls360_custom_images')) || {};
+            locationsData.forEach(item => {
+                if (customImages[item.id]) {
+                    item.img = customImages[item.id];
+                }
+            });
+
+            renderExplore(locationsData);
+
+            // Stats
+            document.getElementById('stat-places').innerText = locationsData.filter(i => i.category === 'Địa danh').length;
+            document.getElementById('stat-culture').innerText = locationsData.filter(i => i.category === 'Lễ hội').length;
+            document.getElementById('stat-food').innerText = locationsData.filter(i => i.category === 'Ẩm thực' || i.category === 'Sản phẩm').length;
+        };
+
+    </script>
+</body>
+
+</html>
